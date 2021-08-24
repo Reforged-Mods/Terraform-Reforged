@@ -1,9 +1,7 @@
 plugins {
 	id 'java'
 	id 'maven-publish'
-	id 'idea'
-	id 'eclipse'
-	id 'fabric-loom' version '0.5-SNAPSHOT'
+	id 'dev.architectury.loom' version '0.7.2-SNAPSHOT' apply false
 }
 
 static def formatVersion(project, version) {
@@ -11,66 +9,14 @@ static def formatVersion(project, version) {
 }
 
 allprojects {
-	apply plugin: 'java'
-	apply plugin: 'idea'
-	apply plugin: 'eclipse'
 	apply plugin: 'maven-publish'
-	apply plugin: 'fabric-loom'
+	apply plugin: 'java'
 
 	sourceCompatibility = 1.8
 	targetCompatibility = 1.8
 
-	group = project.maven_group
-
-	sourceSets {
-		testmod {
-			compileClasspath += main.compileClasspath
-			runtimeClasspath += main.runtimeClasspath
-		}
-	}
-
-	dependencies {
-		minecraft "com.mojang:minecraft:$project.minecraft_version"
-		mappings "net.fabricmc:yarn:$project.yarn_mappings:v2"
-		modImplementation "net.fabricmc:fabric-loader:$project.loader_version"
-
-		compileOnly "com.google.code.findbugs:jsr305:3.0.2"
-	}
-
-	configurations {
-		dev
-	}
-
 	repositories {
 		mavenLocal()
-	}
-
-	jar {
-		classifier = "dev"
-	}
-
-	afterEvaluate {
-		remapJar {
-			input = file("${project.buildDir}/libs/$archivesBaseName-${version}-dev.jar")
-			archiveName = "${archivesBaseName}-${version}.jar"
-		}
-
-		artifacts {
-			dev file: file("${project.buildDir}/libs/$archivesBaseName-${version}-dev.jar"), type: "jar", builtBy: jar
-		}
-
-		processResources {
-			inputs.property "version", project.version
-
-			from(sourceSets.main.resources.srcDirs) {
-				include "fabric.mod.json"
-				expand "version": project.version
-			}
-
-			from(sourceSets.main.resources.srcDirs) {
-				exclude "fabric.mod.json"
-			}
-		}
 	}
 
 	task sourcesJar(type: Jar, dependsOn: classes) {
@@ -80,103 +26,43 @@ allprojects {
 
 	tasks.withType(JavaCompile) {
 		options.encoding = "UTF-8"
+		def targetVersion = 8
+		if (JavaVersion.current().isJava9Compatible()) {
+			options.release = targetVersion
+		}
 	}
 }
 
 subprojects {
+	apply plugin: 'dev.architectury.loom'
+
+
 	dependencies {
-		testmodCompile sourceSets.main.output
+		minecraft "com.mojang:minecraft:$project.minecraft_version"
+		mappings "net.fabricmc:yarn:$project.yarn_mappings:v2"
+
+		forge "net.minecraftforge:forge:$project.minecraft_version-$project.forge_version"
 	}
 
-	task remapMavenJar(type: Copy, dependsOn: remapJar) {
-		afterEvaluate {
-			from("${project.buildDir}/libs/$archivesBaseName-${version}.jar")
-			into("${project.buildDir}/libs/")
-			rename { String fn -> "$archivesBaseName-${version}-maven.jar" }
-		}
-	}
+	processResources {
+		inputs.property "version", project.version
 
-	publish {
-		onlyIf {
-			checkVersion(archivesBaseName, version)
+		filesMatching("META-INF/mods.toml") {
+			expand "version": project.version
 		}
 	}
 
 	publishing {
 		publications {
 			mavenJava(MavenPublication) {
-				afterEvaluate {
-					artifact(file("${project.buildDir}/libs/$archivesBaseName-${version}-maven.jar")) {
-						builtBy remapMavenJar
-					}
-					artifact(sourcesJar) {
-						builtBy remapSourcesJar
-					}
+				// add all the jars that should be included when publishing to maven
+				artifact(remapJar) {
+					builtBy remapJar
+				}
+				artifact(sourcesJar) {
+					builtBy remapSourcesJar
 				}
 			}
 		}
-
-		setupRepositories(repositories)
-	}
-
-	javadoc.enabled = false
-}
-
-void setupRepositories(RepositoryHandler repositories) {
-	//repositories.mavenLocal() // uncomment for testing
-	def ENV = System.getenv()
-	if (ENV.MAVEN_URL) {
-		repositories.maven {
-			url ENV.MAVEN_URL
-			credentials {
-				username ENV.MAVEN_USERNAME
-				password ENV.MAVEN_PASSWORD
-			}
-		}
-	}
-}
-
-dependencies {
-	afterEvaluate {
-		subprojects.each {
-			compile project(path: "${it.name}", configuration: "dev")
-			include project("${it.name}:")
-		}
-	}
-}
-
-task buildTerraform {
-	subprojects.each {
-		subprojects.each { dependsOn("${it.name}:build") }
-	}
-}
-
-task publishTerraform {
-	subprojects.each {
-		subprojects.each { dependsOn("${it.name}:publish") }
-	}
-}
-
-task publishTerraformLocally {
-	subprojects.each {
-		subprojects.each { dependsOn("${it.name}:publishToMavenLocal") }
-	}
-}
-
-ext.checkVersion = { archivesBaseName, version ->
-	try {
-		def xml = new URL("https://maven.terraformersmc.com/com/terraformersmc/terraform-api/$archivesBaseName/maven-metadata.xml").text
-		def metadata = new XmlSlurper().parseText(xml)
-		def versions = metadata.versioning.versions.version*.text();
-		if (versions.contains(version)) {
-			println "$archivesBaseName version $version will not be published; already exists"
-			return false
-		} else {
-			println "$archivesBaseName version $version will be published"
-			return true
-		}
-	} catch (FileNotFoundException ignored) {
-		println "$archivesBaseName is not on maven yet"
-		return true
 	}
 }

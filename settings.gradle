@@ -1,15 +1,16 @@
 pluginManagement {
     repositories {
 
-        maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
-        }
-        gradlePluginPortal()
+		maven {
+			name = 'Fabric'
+			url = 'https://maven.fabricmc.net/'
+		}
+		maven { url "https://maven.architectury.dev/" }
+		maven { url "https://maven.minecraftforge.net/" }
+		gradlePluginPortal()
+		mavenCentral()
     }
 }
-
-rootProject.name = "terraform-api"
 
 include 'terraform-biome-builder-api-v1'
 include 'terraform-config-api-v1'
@@ -19,3 +20,4 @@ include 'terraform-shapes-api-v1'
 include 'terraform-surfaces-api-v1'
 include 'terraform-tree-api-v1'
 include 'terraform-wood-api-v1'
+include 'terraform'
