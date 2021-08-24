@@ -4,7 +4,7 @@ The Terraform Dirt API allows the easy definition of new dirt types, including b
 
 ## Usage
 
-1. Bring `terraform-dirt-api-v1` into your workspace by adding the Terraformers Maven to your project, and add the appropriate dependency lines in Gradle.
+1. Bring `terraform-dirt-api-v1` into your workspace by adding the Jitpack Maven to your project, and add the appropriate dependency lines in Gradle.
 2. Create a new `DirtBlocks` object containing all of the associated block types of a dirt type.
 	* Note that you should probably take this as an opportunity to add custom grass, podzol, and farmland: passing `null`, vanilla, or shared blocks to the DirtBlocks constructor is currently not fully supported.
 3. Add your dirt, grass blocks, and podzol to the `terraform:soil` block tag as appropriate.

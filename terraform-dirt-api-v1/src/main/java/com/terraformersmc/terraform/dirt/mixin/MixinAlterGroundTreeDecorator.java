@@ -1,7 +1,6 @@
 package com.terraformersmc.terraform.dirt.mixin;
 
 import java.util.Random;
-import java.util.function.Predicate;
 
 import com.terraformersmc.terraform.dirt.DirtBlocks;
 import com.terraformersmc.terraform.dirt.TerraformDirtBlockTags;

@@ -9,7 +9,6 @@ import java.io.IOException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import net.fabricmc.loader.api.FabricLoader;
 
 public class BiomeConfigHandler {
 
@@ -25,8 +24,7 @@ public class BiomeConfigHandler {
 		if (file != null) {
 			return;
 		}
-
-		File configDirectory = new File(FabricLoader.getInstance().getConfigDirectory(), namespace);
+		File configDirectory = new File(".", "config" + "/" + namespace);
 		file = new File(configDirectory, "biomes.json");
 
 		if (!configDirectory.exists()) {

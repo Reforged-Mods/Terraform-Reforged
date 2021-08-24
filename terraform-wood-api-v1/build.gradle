@@ -1,2 +1,7 @@
 archivesBaseName = "terraform-wood-api-v1"
 version = formatVersion(project, "1.0.6")
+
+loom {
+	mixinConfigs = ["mixins.terraform-leaves.json", "mixins.terraform-signs.json"]
+	useFabricMixin = true
+}
