@@ -42,6 +42,7 @@ subprojects {
 		mappings "net.fabricmc:yarn:$project.yarn_mappings:v2"
 
 		forge "net.minecraftforge:forge:$project.minecraft_version-$project.forge_version"
+		implementation(project(":terraform"))
 	}
 
 	processResources {

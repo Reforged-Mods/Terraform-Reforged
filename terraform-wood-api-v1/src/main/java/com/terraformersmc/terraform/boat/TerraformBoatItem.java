@@ -16,6 +16,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -23,11 +24,12 @@ import java.util.function.Supplier;
 public class TerraformBoatItem extends Item {
 	private static final Predicate<Entity> RIDERS = EntityPredicates.EXCEPT_SPECTATOR.and(Entity::collides);
 	private final Supplier<EntityType<TerraformBoatEntity>> boatSupplier;
-
+	public static final List<Supplier<EntityType<TerraformBoatEntity>>> SUPPLIERS = new ArrayList<>();
 	public TerraformBoatItem(Supplier<EntityType<TerraformBoatEntity>> boatSupplier, Item.Settings settings) {
 		super(settings);
 
 		this.boatSupplier = boatSupplier;
+		SUPPLIERS.add(boatSupplier);
 	}
 
 	@Override

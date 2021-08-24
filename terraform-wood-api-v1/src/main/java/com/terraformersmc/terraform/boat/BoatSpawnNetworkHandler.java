@@ -1,9 +1,5 @@
 package com.terraformersmc.terraform.boat;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
@@ -12,16 +8,18 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.UUID;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class BoatSpawnNetworkHandler {
 	public void register() {
-		ClientPlayNetworking.registerGlobalReceiver(TerraformBoatEntity.SPAWN_BOAT_CHANNEL, BoatSpawnNetworkHandler::accept);
+		//ClientPlayNetworking.registerGlobalReceiver(TerraformBoatEntity.SPAWN_BOAT_CHANNEL, BoatSpawnNetworkHandler::accept);
 	}
 
-	public static void accept(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buffer, PacketSender sender) {
+	public static void accept(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buffer) {
 		int id = buffer.readVarInt();
 		UUID uuid = buffer.readUuid();
 		EntityType type = Registry.ENTITY_TYPE.get(buffer.readVarInt());

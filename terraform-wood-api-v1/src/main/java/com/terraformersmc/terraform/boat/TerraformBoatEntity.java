@@ -17,6 +17,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 public class TerraformBoatEntity extends BoatEntity {
 	public static final Identifier SPAWN_BOAT_CHANNEL = new Identifier("terraform-wood-api-v1", "spawn_boat");
@@ -98,7 +99,8 @@ public class TerraformBoatEntity extends BoatEntity {
 
 	@Override
 	public Packet<?> createSpawnPacket() {
-		final PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+		return NetworkHooks.getEntitySpawningPacket(this);
+		/*final PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 
 		buf.writeVarInt(this.getEntityId());
 		buf.writeUuid(this.uuid);
@@ -109,7 +111,7 @@ public class TerraformBoatEntity extends BoatEntity {
 		buf.writeByte(MathHelper.floor(this.pitch * 256.0F / 360.0F));
 		buf.writeByte(MathHelper.floor(this.yaw * 256.0F / 360.0F));
 
-		return ServerPlayNetworking.createS2CPacket(SPAWN_BOAT_CHANNEL, buf);
+		return ServerPlayNetworking.createS2CPacket(SPAWN_BOAT_CHANNEL, buf);*/
 	}
 
 	@Override
