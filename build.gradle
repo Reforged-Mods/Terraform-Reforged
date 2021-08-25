@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.bundling.Jar
+
 plugins {
 	id 'java'
 	id 'maven-publish'
@@ -65,4 +67,49 @@ subprojects {
 			}
 		}
 	}
+}
+
+
+
+task allJar(type: Jar, dependsOn: subprojects.remapJar) {
+	classifier = ''
+	inputs.property "version", project.version
+
+	filesMatching("META-INF/mods.toml") {
+		expand "version": project.version
+	}
+	subprojects.each { subproject ->
+		from subproject.sourceSets.main.output
+	}
+	manifest {
+		attributes([
+				"MixinConfigs": "mixins.terraform-biome-builder.json,mixins.terraform-dirt.json,mixins.terraform-leaves.json,mixins.terraform-signs.json,mixins.terraform-overworld-biome-extensions.json,mixins.terraform-tree-api-v1.json"
+		])
+	}
+}
+
+task allSourcesJar(type: Jar, dependsOn: subprojects.sourcesJar) {
+	classifier = 'sources'
+	inputs.property "version", project.version
+
+	filesMatching("META-INF/mods.toml") {
+		expand "version": project.version
+	}
+	subprojects.each { subproject ->
+		from subproject.sourceSets.main.allSource
+	}
+	manifest {
+		attributes([
+				"MixinConfigs": "mixins.terraform-biome-builder.json,mixins.terraform-dirt.json,mixins.terraform-leaves.json,mixins.terraform-signs.json,mixins.terraform-overworld-biome-extensions.json,mixins.terraform-tree-api-v1.json"
+		])
+	}
+}
+
+jar {
+	classifier = "none"
+}
+
+artifacts {
+	archives allSourcesJar
+	archives allJar
 }

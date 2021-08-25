@@ -1,4 +1,4 @@
-package terraformersmc.terraform;
+package com.terraformersmc.terraform;
 
 
 import com.terraformersmc.terraform.boat.TerraformBoatEntity;
