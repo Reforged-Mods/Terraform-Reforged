@@ -32,7 +32,7 @@ shadowJar {
 remapJar {
 	input.set shadowJar.archiveFile
 	dependsOn shadowJar
-	classifier "fat"
+	classifier ""
 }
 
 jar {

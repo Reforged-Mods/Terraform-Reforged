@@ -105,11 +105,7 @@ task allSourcesJar(type: Jar, dependsOn: subprojects.sourcesJar) {
 	}
 }
 
-jar {
-	classifier = "none"
-}
-
 artifacts {
-	archives allSourcesJar
-	archives allJar
+	//archives allSourcesJar
+	//archives allJar
 }
