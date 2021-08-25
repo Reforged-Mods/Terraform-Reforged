@@ -13,7 +13,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import java.util.function.Supplier;
 
-@Mod("terraform-api")
+@Mod("terraform")
 public class TerraformApiReforged {
 	public TerraformApiReforged(){
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
