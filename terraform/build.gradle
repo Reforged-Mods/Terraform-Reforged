@@ -2,28 +2,7 @@ archivesBaseName = "terraform"
 version = formatVersion(project, "1.0.0")
 
 dependencies {
-	implementation(project(":terraform-wood-api-v1")){
-		transitive = false
-	}
-	implementation(project(":terraform-tree-api-v1")){
-		transitive = false
-	}
-	implementation(project(":terraform-surfaces-api-v1")){
-		transitive = false
-	}
-	implementation(project(":terraform-shapes-api-v1")){
-		transitive = false
-	}
-	implementation(project(":terraform-overworld-biome-extensions-api-v1")){
-		transitive = false
-	}
-	implementation(project(":terraform-dirt-api-v1")){
-		transitive = false
-	}
-	implementation(project(":terraform-biome-builder-api-v1")){
-		transitive = false
-	}
-	implementation(project(":terraform-config-api-v1")){
+	compileOnly(project(":terraform-wood-api-v1")){
 		transitive = false
 	}
 }

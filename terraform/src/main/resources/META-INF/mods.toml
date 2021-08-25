@@ -4,7 +4,7 @@ loaderVersion="[31,)"
 issueTrackerURL="https://github.com/Trinsdar/Terraform-Reforged/issues"
 
 [[mods]]
-modId="terraform"
+modId="terraform-api"
 version="${version}"
 displayName="Terraform Api Reforged"
 displayURL="https://github.com/Trinsdar/Terraform-Reforged"

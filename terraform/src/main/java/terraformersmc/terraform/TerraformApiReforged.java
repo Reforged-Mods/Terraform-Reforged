@@ -1,30 +1,31 @@
 package terraformersmc.terraform;
 
 
-import com.terraformersmc.terraform.TerraformWood;
+import com.terraformersmc.terraform.boat.TerraformBoatEntity;
+import com.terraformersmc.terraform.boat.TerraformBoatItem;
+import com.terraformersmc.terraform.boat.TerraformBoatRenderer;
+import net.minecraft.entity.EntityType;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
+import java.util.function.Supplier;
+
 @Mod("terraform-api")
 public class TerraformApiReforged {
 	public TerraformApiReforged(){
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
-		new TerraformWood();
 	}
 
 	private void setup(FMLCommonSetupEvent event){
-		for (TerraformMod mod : TerraformMod.MODULES){
-			mod.setup(event);
-		}
 	}
 
 	private void clientSetup(FMLClientSetupEvent event){
-		for (TerraformMod mod : TerraformMod.MODULES){
-			mod.clientSetup(event);
+		for (Supplier<EntityType<TerraformBoatEntity>> supplier : TerraformBoatItem.SUPPLIERS){
+			RenderingRegistry.registerEntityRenderingHandler(supplier.get(), TerraformBoatRenderer::new);
 		}
 	}
 }
