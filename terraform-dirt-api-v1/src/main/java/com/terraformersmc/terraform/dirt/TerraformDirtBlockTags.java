@@ -16,6 +16,9 @@ public class TerraformDirtBlockTags {
 	private TerraformDirtBlockTags() {
 	}
 
+	public static void init(){
+	}
+
 	private static Tag.Identified<Block> register(String id) {
 		return BlockTags.register(new Identifier("terraform", id).toString());
 	}

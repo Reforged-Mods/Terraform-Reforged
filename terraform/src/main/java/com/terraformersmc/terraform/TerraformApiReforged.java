@@ -4,6 +4,7 @@ package com.terraformersmc.terraform;
 import com.terraformersmc.terraform.boat.TerraformBoatEntity;
 import com.terraformersmc.terraform.boat.TerraformBoatItem;
 import com.terraformersmc.terraform.boat.TerraformBoatRenderer;
+import com.terraformersmc.terraform.dirt.TerraformDirtBlockTags;
 import net.minecraft.entity.EntityType;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -21,6 +22,7 @@ public class TerraformApiReforged {
 	}
 
 	private void setup(FMLCommonSetupEvent event){
+		TerraformDirtBlockTags.init();
 	}
 
 	private void clientSetup(FMLClientSetupEvent event){

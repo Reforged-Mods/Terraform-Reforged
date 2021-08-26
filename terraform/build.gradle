@@ -34,6 +34,9 @@ dependencies {
 	compileOnly(project(":terraform-wood-api-v1")){
 		transitive = false
 	}
+	compileOnly(project(":terraform-dirt-api-v1")){
+		transitive = false
+	}
 }
 
 shadowJar {
