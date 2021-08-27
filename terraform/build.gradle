@@ -6,19 +6,6 @@ loom{
 	mixinConfigs = ["mixins.terraform-biome-builder.json","mixins.terraform-dirt.json","mixins.terraform-leaves.json","mixins.terraform-signs.json","mixins.terraform-overworld-biome-extensions.json","mixins.terraform-tree-api-v1.json"]
 }
 
-sourceSets {
-	main {
-		java {
-			srcDir 'src/main/java'
-		}
-		resources {
-			include '**/**'
-			srcDirs += 'src/generated/resources'
-			exclude '.cache'
-			exclude 'Thumbs.db'
-		}
-	}
-}
 
 configurations {
 	shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
