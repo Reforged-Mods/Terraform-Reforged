@@ -3,5 +3,4 @@ version = formatVersion(project, "1.1.5")
 
 loom {
 	mixinConfigs = ["mixins.terraform-dirt.json"]
-	useFabricMixin = true
 }

@@ -3,5 +3,4 @@ version = formatVersion(project, "1.0.6")
 
 loom {
 	mixinConfigs = ["mixins.terraform-biome-builder.json"]
-	useFabricMixin = true
 }
