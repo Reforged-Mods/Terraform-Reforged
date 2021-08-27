@@ -30,7 +30,7 @@ shadowJar {
 	exclude "fabric.mod.json"
 
 	configurations = [project.configurations.shadowCommon]
-	classifier "dev-shadow"
+	classifier "dev"
 }
 
 remapJar {
@@ -40,5 +40,5 @@ remapJar {
 }
 
 jar {
-	classifier "dev"
+	classifier "dev-bare"
 }

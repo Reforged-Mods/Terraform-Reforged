@@ -8,7 +8,6 @@ modId="terraform"
 version="${version}"
 displayName="Terraform Api Reforged"
 displayURL="https://github.com/Trinsdar/Terraform-Reforged"
-logoFile="assets/terraform/icon.png"
 credits="Terraform team for creating the original api."
 authors="Trinsdar"
 description='''A Port of the Terraform api to forge'''
