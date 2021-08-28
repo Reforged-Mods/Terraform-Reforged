@@ -26,8 +26,5 @@ public class TerraformApiReforged {
 	}
 
 	private void clientSetup(FMLClientSetupEvent event){
-		for (Supplier<EntityType<TerraformBoatEntity>> supplier : TerraformBoatItem.SUPPLIERS){
-			RenderingRegistry.registerEntityRenderingHandler(supplier.get(), TerraformBoatRenderer::new);
-		}
 	}
 }
