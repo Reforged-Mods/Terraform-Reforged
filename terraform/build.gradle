@@ -54,9 +54,6 @@ publishing {
 			artifact(shadowJar) {
 				builtBy shadowJar
 			}
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
 		}
 	}
 }
