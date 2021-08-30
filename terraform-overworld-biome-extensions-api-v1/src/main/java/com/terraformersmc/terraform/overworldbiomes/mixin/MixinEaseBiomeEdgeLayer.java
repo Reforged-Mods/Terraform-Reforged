@@ -4,6 +4,8 @@ import java.util.Optional;
 import java.util.function.IntConsumer;
 
 import com.terraformersmc.terraform.overworldbiomes.OverworldBiomesExt;
+import net.minecraft.world.biome.BuiltinBiomes;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -68,10 +70,17 @@ public class MixinEaseBiomeEdgeLayer {
 	}
 
 	private static RegistryKey<Biome> fromRawId(int raw) {
-		return BuiltinRegistries.BIOME.getKey(BuiltinRegistries.BIOME.get(raw)).orElseThrow(IllegalStateException::new);
+		return BuiltinBiomes.fromRawId(raw);
 	}
 
 	private static int toRawId(RegistryKey<Biome> key) {
-		return BuiltinRegistries.BIOME.getRawId(BuiltinRegistries.BIOME.get(key));
+		return BuiltinRegistries.BIOME.getRawId(getOrThrow(key));
+	}
+
+	private static Biome getOrThrow(RegistryKey<Biome> key){
+		if (ForgeRegistries.BIOMES.containsKey(key.getValue())){
+			return ForgeRegistries.BIOMES.getValue(key.getValue());
+		}
+		throw new IllegalStateException("Missing: " + key + "from forge Registry, did you register the biome?");
 	}
 }

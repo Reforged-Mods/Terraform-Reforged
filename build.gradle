@@ -39,6 +39,10 @@ subprojects {
 	apply plugin: 'dev.architectury.loom'
 
 
+	configurations { remapped }
+	artifacts.add("remapped", remapJar)
+
+
 	dependencies {
 		minecraft "com.mojang:minecraft:$project.minecraft_version"
 		mappings "net.fabricmc:yarn:$project.yarn_mappings:v2"
