@@ -16,12 +16,15 @@ version = formatVersion(project, "1.0.1")
 dependencies {
 	def deps = [":terraform-biome-builder-api-v1", ":terraform-config-api-v1", ":terraform-dirt-api-v1", ":terraform-overworld-biome-extensions-api-v1", ":terraform-shapes-api-v1", ":terraform-surfaces-api-v1", ":terraform-tree-api-v1", ":terraform-wood-api-v1"]
 	for (String s : deps){
-		shadowCommon(project(s))
+		shadowCommon(project(path: s, configuration: "remapped"))
 	}
 	compileOnly(project(":terraform-wood-api-v1")){
 		transitive = false
 	}
 	compileOnly(project(":terraform-dirt-api-v1")){
+		transitive = false
+	}
+	compileOnly(project(":terraform-tree-api-v1")){
 		transitive = false
 	}
 }
