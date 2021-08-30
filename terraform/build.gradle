@@ -31,17 +31,18 @@ dependencies {
 
 shadowJar {
 	exclude "fabric.mod.json"
-
+	from zipTree(remapJar.archiveFile)
+	assemble.dependsOn shadowJar
 	configurations = [project.configurations.shadowCommon]
-	classifier "dev"
-}
-
-remapJar {
-	input.set shadowJar.archiveFile
-	dependsOn shadowJar
 	classifier ""
 }
 
-jar {
-	classifier "dev-bare"
+afterEvaluate{
+	remapJar {
+		classifier "thin"
+	}
+
+	jar {
+		classifier "dev"
+	}
 }
