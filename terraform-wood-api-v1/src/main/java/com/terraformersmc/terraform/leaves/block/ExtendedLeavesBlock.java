@@ -3,7 +3,6 @@ package com.terraformersmc.terraform.leaves.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.LeavesBlock;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
@@ -20,6 +19,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.IForgeShearable;
 
 import java.util.Random;
 
@@ -27,7 +27,7 @@ import java.util.Random;
  * A leaves block with extended range, permitting leaves to be as far as 13 blocks away from the tree rather than the
  * limit of 6 blocks imposed by vanilla leaves. It also does not block light at all.
  */
-public class ExtendedLeavesBlock extends LeavesBlock {
+public class ExtendedLeavesBlock extends Block implements IForgeShearable {
 	public static final int MAX_DISTANCE = 14;
 	public static final BooleanProperty PERSISTENT = Properties.PERSISTENT;
 	public static final IntProperty DISTANCE = IntProperty.of("distance", 1, MAX_DISTANCE);
