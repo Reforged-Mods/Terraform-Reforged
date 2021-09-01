@@ -1,5 +1,6 @@
 package com.terraformersmc.terraform.leaves.mixin;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.terraformersmc.terraform.wood.block.SmallLogBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
@@ -24,6 +25,20 @@ public class MixinRenderLayers {
 	private static void onGetBlockRenderLayer(BlockState state, CallbackInfoReturnable<RenderLayer> info) {
 		if (state.getBlock() instanceof ExtendedLeavesBlock || (state.getBlock() instanceof SmallLogBlock && state.get(SmallLogBlock.HAS_LEAVES))) {
 			info.setReturnValue(fancyGraphicsOrBetter ? RenderLayer.getCutoutMipped() : RenderLayer.getSolid());
+		}
+	}
+
+	@Inject(method = "getMovingBlockLayer", at = @At("HEAD"), cancellable = true)
+	private static void onGetMovingBlockRenderLayer(BlockState state, CallbackInfoReturnable<RenderLayer> info) {
+		if (state.getBlock() instanceof ExtendedLeavesBlock || (state.getBlock() instanceof SmallLogBlock && state.get(SmallLogBlock.HAS_LEAVES))) {
+			info.setReturnValue(fancyGraphicsOrBetter ? RenderLayer.getCutoutMipped() : RenderLayer.getSolid());
+		}
+	}
+
+	@Inject(method = "canRenderInLayer", at = @At("HEAD"), cancellable = true)
+	private static void onCanRenderInLayer(BlockState state, RenderLayer type, CallbackInfoReturnable<Boolean> info) {
+		if (state.getBlock() instanceof ExtendedLeavesBlock || (state.getBlock() instanceof SmallLogBlock && state.get(SmallLogBlock.HAS_LEAVES))) {
+			info.setReturnValue(fancyGraphicsOrBetter ? type == RenderLayer.getCutoutMipped() : type == RenderLayer.getSolid());
 		}
 	}
 }
