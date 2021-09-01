@@ -4,12 +4,16 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.BlockTags;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -20,7 +24,10 @@ import net.minecraft.world.WorldAccess;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IForgeShearable;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -125,5 +132,26 @@ public class ExtendedLeavesBlock extends Block implements IForgeShearable {
 	@Override
 	public VoxelShape getSidesShape(BlockState state, BlockView world, BlockPos pos) {
 		return VoxelShapes.empty();
+	}
+
+
+	//AntimatterApi branch cutter support
+	@Override
+	public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
+		List<ItemStack> list = super.getDroppedStacks(state, builder);
+		if (ModList.get().isLoaded("antimatter")){
+			ItemStack stack = builder.get(LootContextParameters.TOOL);
+			if (stack != null && !stack.isEmpty() && stack.getItem().getRegistryName().toString().equals("antimatter:branch_cutter")){
+				ItemStack sapling = ItemStack.EMPTY;
+				if (ForgeRegistries.BLOCKS.containsKey(new Identifier(this.getRegistryName().toString().replace("leaves", "sapling")))){
+					sapling = new ItemStack(ForgeRegistries.BLOCKS.getValue(new Identifier(this.getRegistryName().toString().replace("leaves", "sapling"))));
+				}
+				if (!sapling.isEmpty()){
+					list.clear();
+					list.add(sapling);
+				}
+			}
+		}
+		return list;
 	}
 }

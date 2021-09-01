@@ -23,6 +23,7 @@ public abstract class MixinTreeFeature<FC extends FeatureConfig> extends Feature
 	}
 
 	// Bypasses the "no default constructor" error, will never actually get used
+	@SuppressWarnings("ConstantConditions")
 	private MixinTreeFeature() {
 		super(null);
 		throw new UnsupportedOperationException();
