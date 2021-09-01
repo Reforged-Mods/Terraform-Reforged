@@ -1,6 +1,5 @@
 package com.terraformersmc.terraform.leaves.mixin;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.terraformersmc.terraform.wood.block.SmallLogBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;

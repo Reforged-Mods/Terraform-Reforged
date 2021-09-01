@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.terraformersmc.terraform.utils.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "AbstractBlockAccessor",
+    "AbstractBlockSettingsAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
