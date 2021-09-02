@@ -3,7 +3,7 @@ plugins {
 }
 
 loom{
-	mixinConfigs = ["mixins.terraform-biome-builder.json","mixins.terraform-dirt.json","mixins.terraform-leaves.json","mixins.terraform-signs.json","mixins.terraform-overworld-biome-extensions.json","mixins.terraform-tree-api-v1.json"]
+	mixinConfigs = ["mixins.terraform-biome-builder.json","mixins.terraform-dirt.json","mixins.terraform-leaves.json","mixins.terraform-signs.json","mixins.terraform-overworld-biome-extensions.json","mixins.terraform-tree-api-v1.json", "mixins.terraform-utils.json"]
 }
 
 
