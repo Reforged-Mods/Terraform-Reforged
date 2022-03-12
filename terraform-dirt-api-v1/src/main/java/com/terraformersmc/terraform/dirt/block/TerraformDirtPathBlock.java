@@ -4,14 +4,14 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.GrassPathBlock;
+import net.minecraft.block.DirtPathBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class TerraformGrassPathBlock extends GrassPathBlock {
+public class TerraformDirtPathBlock extends DirtPathBlock {
 	private Block dirt;
 
-	public TerraformGrassPathBlock(Block dirt, Settings settings) {
+	public TerraformDirtPathBlock(Block dirt, Settings settings) {
 		super(settings);
 
 		this.dirt = dirt;

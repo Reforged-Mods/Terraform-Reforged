@@ -85,7 +85,6 @@ public class SmallLogBlock extends BareSmallLogBlock {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult result) {
 		ItemStack held = player.getStackInHand(hand);
 
@@ -131,7 +130,7 @@ public class SmallLogBlock extends BareSmallLogBlock {
 		} else if(stripped != null && held.getItem() instanceof MiningToolItem) {
 			MiningToolItem tool = (MiningToolItem) held.getItem();
 
-			if(tool.isEffectiveOn(state) || tool.getMiningSpeedMultiplier(held, state) > 1.0F) {
+			if(tool.getMiningSpeedMultiplier(held, state) > 1.0F) {
 				world.playSound(player, pos, SoundEvents.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
 				if(!world.isClient) {
@@ -173,7 +172,7 @@ public class SmallLogBlock extends BareSmallLogBlock {
 	@Override
 	public BlockState getNeighborUpdateState(BlockState state, Direction fromDirection, BlockState neighbor, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
 		if (state.get(WATERLOGGED)) {
-			world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+			world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
 		}
 
 		boolean leaves = state.get(HAS_LEAVES);
@@ -228,13 +227,11 @@ public class SmallLogBlock extends BareSmallLogBlock {
 
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
 		return state.get(HAS_LEAVES) ? VoxelShapes.fullCube() : this.boundingShapes[this.getShapeIndex(state)];
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public VoxelShape getCollisionShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
 		return state.get(HAS_LEAVES) ? VoxelShapes.fullCube() : this.collisionShapes[this.getShapeIndex(state)];
 	}
@@ -245,7 +242,7 @@ public class SmallLogBlock extends BareSmallLogBlock {
 	}
 
 	@Override
-	public VoxelShape getVisualShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+	public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
 		return this.collisionShapes[this.getShapeIndex(state)];
 	}
 }

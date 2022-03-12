@@ -167,14 +167,13 @@ public class BareSmallLogBlock extends Block implements Waterloggable {
 
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult result) {
 		ItemStack held = player.getStackInHand(hand);
 
 		if(stripped != null && held.getItem() instanceof MiningToolItem) {
 			MiningToolItem tool = (MiningToolItem) held.getItem();
 
-			if(tool.isEffectiveOn(state) || tool.getMiningSpeedMultiplier(held, state) > 1.0F) {
+			if(tool.getMiningSpeedMultiplier(held, state) > 1.0F) {
 				world.playSound(player, pos, SoundEvents.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
 				if(!world.isClient) {
@@ -217,14 +216,18 @@ public class BareSmallLogBlock extends Block implements Waterloggable {
 		super.onPlaced(world, pos, state, entity, stack);
 
 		for (Direction direction : Direction.values()) {
-			if (world.getBlockState(pos.offset(direction)).getBlock() instanceof BareSmallLogBlock) {
-				world.setBlockState(pos.offset(direction),
-					getNeighborUpdateState(world.getBlockState(pos.offset(direction)),
-						direction.getOpposite(),
-						world.getBlockState(pos),
-						world,
-						pos.offset(direction),
-						pos));
+			BlockPos offsetPos = pos.offset(direction);
+			BlockState offsetState = world.getBlockState(offsetPos);
+
+			if (offsetState.getBlock() instanceof BareSmallLogBlock) {
+				world.setBlockState(offsetPos, getNeighborUpdateState(
+					offsetState,
+					direction.getOpposite(),
+					state,
+					world,
+					offsetPos,
+					pos
+				));
 			}
 		}
 	}
@@ -272,7 +275,6 @@ public class BareSmallLogBlock extends Block implements Waterloggable {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public FluidState getFluidState(BlockState state) {
 		return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
 	}
@@ -293,7 +295,6 @@ public class BareSmallLogBlock extends Block implements Waterloggable {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public BlockState mirror(BlockState state, BlockMirror mirror) {
 		switch (mirror) {
 			case LEFT_RIGHT:
@@ -306,14 +307,13 @@ public class BareSmallLogBlock extends Block implements Waterloggable {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public boolean canPathfindThrough(BlockState state, BlockView view, BlockPos pos, NavigationType blockPlacementEnvironment_1) {
 		return false;
 	}
 
 	public BlockState getNeighborUpdateState(BlockState state, Direction fromDirection, BlockState neighbor, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
 		if (state.get(WATERLOGGED)) {
-			world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+			world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
 		}
 
 		boolean up = fromDirection == Direction.UP && this.shouldConnectTo(neighbor, neighbor.isSideSolidFullSquare(world, neighborPos, Direction.DOWN)) || state.get(UP);
@@ -338,13 +338,11 @@ public class BareSmallLogBlock extends Block implements Waterloggable {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
 		return this.boundingShapes[this.getShapeIndex(state)];
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public VoxelShape getCollisionShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
 		return this.collisionShapes[this.getShapeIndex(state)];
 	}

@@ -1,5 +1,5 @@
 archivesBaseName = "terraform-wood-api-v1"
-version = formatVersion(project, "1.0.6")
+version = formatVersion(project, "2.0.2")
 
 loom {
 	forge{

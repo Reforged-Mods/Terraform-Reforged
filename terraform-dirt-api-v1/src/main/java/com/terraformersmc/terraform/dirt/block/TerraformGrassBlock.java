@@ -112,7 +112,6 @@ public class TerraformGrassBlock extends GrassBlock {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 		ItemStack heldStack = player.getEquippedStack(hand == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
 
@@ -131,7 +130,7 @@ public class TerraformGrassBlock extends GrassBlock {
 			return ActionResult.FAIL;
 		}
 
-		if (path != null && (tool.isEffectiveOn(state) || tool.getMiningSpeedMultiplier(heldStack, state) > 1.0F || tool instanceof ShovelItem)) {
+		if (path != null && (tool.getMiningSpeedMultiplier(heldStack, state) > 1.0F || tool instanceof ShovelItem)) {
 			world.playSound(player, pos, SoundEvents.ITEM_SHOVEL_FLATTEN, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
 			if (!world.isClient) {
