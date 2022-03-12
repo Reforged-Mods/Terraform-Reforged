@@ -19,8 +19,4 @@ public class TerraformDirtBlockTags {
 	private static TagKey<Block> register(String id) {
 		return TagKey.of(Registry.BLOCK_KEY, new Identifier("terraform", id));
 	}
-
-	private static Tags.IOptionalNamedTag<Block> register(String id) {
-		return BlockTags.createOptional(new Identifier("terraform", id));
-	}
 }

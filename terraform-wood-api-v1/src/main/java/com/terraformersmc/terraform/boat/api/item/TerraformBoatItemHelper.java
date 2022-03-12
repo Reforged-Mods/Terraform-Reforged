@@ -1,11 +1,13 @@
 package com.terraformersmc.terraform.boat.api.item;
 
+import java.util.Map;
 import java.util.function.Supplier;
 
 import com.terraformersmc.terraform.boat.api.TerraformBoatType;
 import com.terraformersmc.terraform.boat.impl.item.TerraformBoatDispenserBehavior;
 import com.terraformersmc.terraform.boat.impl.item.TerraformBoatItem;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
@@ -18,6 +20,7 @@ import net.minecraft.util.registry.Registry;
  * such as {@linkplain #registerBoatItem(Identifier, Supplier, Item.Settings) registering them and their dispenser behavior}.
  */
 public final class TerraformBoatItemHelper {
+	public static final Map<Identifier, Item> REGISTRY_MAP = new Object2ObjectLinkedOpenHashMap<>();
 	private static final ItemGroup DEFAULT_ITEM_GROUP = ItemGroup.TRANSPORTATION;
 
 	private TerraformBoatItemHelper() {
@@ -79,7 +82,7 @@ public final class TerraformBoatItemHelper {
 	 */
 	public static Item registerBoatItem(Identifier id, Supplier<TerraformBoatType> boatSupplier, Item.Settings settings) {
 		Item item = new TerraformBoatItem(boatSupplier, settings);
-		Registry.register(Registry.ITEM, id, item);
+		REGISTRY_MAP.put(id, item);
 
 		registerBoatDispenserBehavior(item, boatSupplier);
 		return item;

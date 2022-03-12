@@ -1,22 +1,29 @@
 package com.terraformersmc.terraform.boat.impl;
 
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-public final class TerraformBoatInitializer implements ModInitializer {
+public final class TerraformBoatInitializer {
 	private static final Identifier BOAT_ID = new Identifier("terraform", "boat");
-	public static final EntityType<TerraformBoatEntity> BOAT = FabricEntityTypeBuilder.<TerraformBoatEntity>create(SpawnGroup.MISC, TerraformBoatEntity::new)
-		.dimensions(EntityDimensions.fixed(1.375f, 0.5625f))
-		.build();
+	public static final EntityType<TerraformBoatEntity> BOAT = EntityType.Builder.<TerraformBoatEntity>create(TerraformBoatEntity::new, SpawnGroup.MISC)
+		.setDimensions(1.375f, 0.5625f)
+		.build(BOAT_ID.toString());
 
-	@Override
-	public void onInitialize() {
+	public TerraformBoatInitializer(){
 		TerraformBoatTrackedData.register();
-		Registry.register(Registry.ENTITY_TYPE, BOAT_ID, BOAT);
+		FMLJavaModLoadingContext.get().getModEventBus().register(this);
+	}
+
+
+	@SubscribeEvent
+	public void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> event){
+		BOAT.setRegistryName(BOAT_ID);
+		event.getRegistry().register(BOAT);
 	}
 }

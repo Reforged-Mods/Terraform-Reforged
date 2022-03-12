@@ -8,17 +8,16 @@ import com.terraformersmc.terraform.boat.api.TerraformBoatType;
 import com.terraformersmc.terraform.boat.api.TerraformBoatTypeRegistry;
 import com.terraformersmc.terraform.boat.api.client.TerraformBoatClientHelper;
 import com.terraformersmc.terraform.boat.impl.TerraformBoatEntity;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.BoatEntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.model.BoatEntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.util.Identifier;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class TerraformBoatEntityRenderer extends BoatEntityRenderer {
 	private final Map<TerraformBoatType, Pair<Identifier, BoatEntityModel>> texturesAndModels;
 

@@ -2,14 +2,12 @@ package com.terraformersmc.terraform.boat.impl.client;
 
 import com.terraformersmc.terraform.boat.impl.TerraformBoatInitializer;
 
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@Environment(EnvType.CLIENT)
-public final class TerraformBoatClientInitializer implements ClientModInitializer {
-	@Override
+@OnlyIn(Dist.CLIENT)
+public final class TerraformBoatClientInitializer {
+
 	public void onInitializeClient() {
 		EntityRendererRegistry.register(TerraformBoatInitializer.BOAT, TerraformBoatEntityRenderer::new);
 	}

@@ -3,6 +3,6 @@ version = formatVersion(project, "2.0.2")
 
 loom {
 	forge{
-		mixinConfigs = ["mixins.terraform-leaves.json", "mixins.terraform-signs.json"]
+		mixinConfigs = ["mixins.terraform-leaves.json", "mixins.terraform-signs.json","mixins.terraform-boats.json"]
 	}
 }

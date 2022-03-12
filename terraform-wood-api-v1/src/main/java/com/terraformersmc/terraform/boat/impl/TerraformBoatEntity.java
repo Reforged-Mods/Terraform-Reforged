@@ -3,6 +3,7 @@ package com.terraformersmc.terraform.boat.impl;
 import com.terraformersmc.terraform.boat.api.TerraformBoatType;
 import com.terraformersmc.terraform.boat.api.TerraformBoatTypeRegistry;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -19,7 +20,7 @@ public class TerraformBoatEntity extends BoatEntity {
 	private static final String BOAT_KEY = "TerraformBoat";
 	private static final TrackedData<TerraformBoatType> TERRAFORM_BOAT = DataTracker.registerData(TerraformBoatEntity.class, TerraformBoatTrackedData.HANDLER);
 
-	public TerraformBoatEntity(EntityType<? extends TerraformBoatEntity> type, World world) {
+	public TerraformBoatEntity(EntityType<TerraformBoatEntity> type, World world) {
 		super(type, world);
 	}
 
