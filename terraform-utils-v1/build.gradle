@@ -2,5 +2,7 @@ archivesBaseName = "terraform-utils-v1"
 version = formatVersion(project, "1.0.0")
 
 loom {
-	mixinConfigs = ["mixins.terraform-utils.json"]
+	forge{
+		mixinConfigs = ["mixins.terraform-utils.json"]
+	}
 }
