@@ -1,9 +1,10 @@
 import org.gradle.api.tasks.bundling.Jar
+import org.gradle.jvm.toolchain.JavaLanguageVersion
 
 plugins {
 	id 'java'
 	id 'maven-publish'
-	id 'dev.architectury.loom' version '0.7.2-SNAPSHOT' apply false
+	id 'dev.architectury.loom' version '0.11.0-SNAPSHOT' apply false
 }
 
 static def formatVersion(project, version) {
@@ -14,8 +15,8 @@ allprojects {
 	apply plugin: 'maven-publish'
 	apply plugin: 'java'
 
-	sourceCompatibility = 1.8
-	targetCompatibility = 1.8
+
+	java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 	repositories {
 		mavenLocal()
@@ -28,10 +29,6 @@ allprojects {
 
 	tasks.withType(JavaCompile) {
 		options.encoding = "UTF-8"
-		def targetVersion = 8
-		if (JavaVersion.current().isJava9Compatible()) {
-			options.release = targetVersion
-		}
 	}
 }
 
