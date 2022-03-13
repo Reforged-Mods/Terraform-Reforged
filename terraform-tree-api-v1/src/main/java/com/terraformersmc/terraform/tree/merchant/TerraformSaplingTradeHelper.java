@@ -2,7 +2,6 @@ package com.terraformersmc.terraform.tree.merchant;
 
 import java.util.Random;
 
-import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;

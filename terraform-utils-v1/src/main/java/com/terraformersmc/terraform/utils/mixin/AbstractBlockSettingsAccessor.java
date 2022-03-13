@@ -2,8 +2,8 @@ package com.terraformersmc.terraform.utils.mixin;
 
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.MapColor;
 import net.minecraft.block.Material;
-import net.minecraft.block.MaterialColor;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,7 +35,7 @@ public interface AbstractBlockSettingsAccessor {
     ToIntFunction<BlockState> getLuminance();
 
     @Accessor
-    Function<BlockState, MaterialColor> getMaterialColorFactory();
+    Function<BlockState, MapColor> getMapColorProvider();
 
     @Accessor
     BlockSoundGroup getSoundGroup();
