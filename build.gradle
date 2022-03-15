@@ -4,7 +4,7 @@ import org.gradle.jvm.toolchain.JavaLanguageVersion
 plugins {
 	id 'java'
 	id 'maven-publish'
-	id 'dev.architectury.loom' version '0.10.0-SNAPSHOT' apply false
+	id 'dev.architectury.loom' version '0.11.0-SNAPSHOT' apply false
 }
 
 static def formatVersion(project, version) {
