@@ -1,5 +1,6 @@
 package com.terraformersmc.terraform.boat.api.client;
 
+import com.terraformersmc.terraform.boat.impl.client.TerraformBoatClientInitializer;
 import net.minecraft.client.render.entity.model.BoatEntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;
@@ -45,6 +46,6 @@ public final class TerraformBoatClientHelper {
 	 * }</pre>
 	 */
 	public static void registerModelLayer(Identifier boatId) {
-		EntityModelLayerRegistry.registerModelLayer(getLayer(boatId), BoatEntityModel::getTexturedModelData);
+		TerraformBoatClientInitializer.SUPPLIER_MAP.put(boatId, BoatEntityModel::getTexturedModelData);
 	}
 }
