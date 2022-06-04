@@ -3,7 +3,6 @@ package com.terraformersmc.terraform.boat.impl;
 import com.terraformersmc.terraform.boat.api.TerraformBoatType;
 import com.terraformersmc.terraform.boat.api.TerraformBoatTypeRegistry;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -51,7 +50,7 @@ public class TerraformBoatEntity extends BoatEntity {
 
 	@Override
 	public Item asItem() {
-		return this.getTerraformBoat().getItem();
+		return this.getTerraformBoat().item();
 	}
 
 	@Override

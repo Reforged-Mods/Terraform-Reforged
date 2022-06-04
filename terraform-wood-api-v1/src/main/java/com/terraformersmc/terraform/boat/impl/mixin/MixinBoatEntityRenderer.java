@@ -21,8 +21,8 @@ import net.minecraft.util.Identifier;
 public class MixinBoatEntityRenderer {
 	@Redirect(method = "render", at = @At(value = "INVOKE", target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;"))
 	private Object getTerraformBoatTextureAndModel(Map<BoatEntity.Type, Pair<Identifier, BoatEntityModel>> map, Object type, BoatEntity entity) {
-		if (entity instanceof TerraformBoatEntity && ((Object) this) instanceof TerraformBoatEntityRenderer) {
-			return ((TerraformBoatEntityRenderer) (Object) this).getTextureAndModel((TerraformBoatEntity) entity);
+		if (entity instanceof TerraformBoatEntity && ((Object) this) instanceof TerraformBoatEntityRenderer renderer) {
+			return renderer.getTextureAndModel((TerraformBoatEntity) entity);
 		}
 		return map.get(type);
 	}

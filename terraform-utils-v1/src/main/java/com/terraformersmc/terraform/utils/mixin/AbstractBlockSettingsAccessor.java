@@ -31,7 +31,7 @@ public interface AbstractBlockSettingsAccessor {
     @Accessor
     boolean getRandomTicks();
 
-    @Accessor("luminance")
+    @Accessor
     ToIntFunction<BlockState> getLuminance();
 
     @Accessor
