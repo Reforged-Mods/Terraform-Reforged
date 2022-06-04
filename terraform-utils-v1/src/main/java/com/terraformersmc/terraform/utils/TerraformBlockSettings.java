@@ -203,15 +203,6 @@ public class TerraformBlockSettings extends AbstractBlock.Settings {
 
 	/* Terraform ADDITIONS*/
 
-	/**
-	 * @deprecated Please use {@link TerraformBlockSettings#luminance(int)}.
-	 */
-	@Deprecated
-	public TerraformBlockSettings lightLevel(int lightLevel) {
-		this.luminance(lightLevel);
-		return this;
-	}
-
 	public TerraformBlockSettings luminance(int luminance) {
 		this.luminance(ignored -> luminance);
 		return this;
@@ -242,22 +233,6 @@ public class TerraformBlockSettings extends AbstractBlock.Settings {
 	}
 
 	/* Terraform DELEGATE WRAPPERS */
-
-	/**
-	 * @deprecated Please migrate to {@link TerraformBlockSettings#mapColor(MapColor)}
-	 */
-	@Deprecated
-	public TerraformBlockSettings materialColor(MapColor color) {
-		return this.mapColor(color);
-	}
-
-	/**
-	 * @deprecated Please migrate to {@link TerraformBlockSettings#mapColor(DyeColor)}
-	 */
-	@Deprecated
-	public TerraformBlockSettings materialColor(DyeColor color) {
-		return this.mapColor(color);
-	}
 
 	public TerraformBlockSettings mapColor(MapColor color) {
 		((AbstractBlockSettingsAccessor) this).setMapColorProvider(ignored -> color);
