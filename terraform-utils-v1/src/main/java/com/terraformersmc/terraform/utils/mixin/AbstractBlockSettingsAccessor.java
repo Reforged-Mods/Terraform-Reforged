@@ -1,9 +1,11 @@
 package com.terraformersmc.terraform.utils.mixin;
 
 import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.MapColor;
 import net.minecraft.block.Material;
+import net.minecraft.entity.EntityType;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,97 +18,117 @@ import java.util.function.ToIntFunction;
 @Mixin(AbstractBlock.Settings.class)
 public interface AbstractBlockSettingsAccessor {
     /* GETTERS */
-    @Accessor
-    Material getMaterial();
+	@Accessor
+	Material getMaterial();
 
-    @Accessor
-    float getHardness();
+	@Accessor
+	float getHardness();
 
-    @Accessor
-    float getResistance();
+	@Accessor
+	float getResistance();
 
-    @Accessor
-    boolean getCollidable();
+	@Accessor
+	boolean getCollidable();
 
-    @Accessor
-    boolean getRandomTicks();
+	@Accessor
+	boolean getRandomTicks();
 
-    @Accessor
-    ToIntFunction<BlockState> getLuminance();
+	@Accessor
+	ToIntFunction<BlockState> getLuminance();
 
-    @Accessor
-    Function<BlockState, MapColor> getMapColorProvider();
+	@Accessor
+	Function<BlockState, MapColor> getMapColorProvider();
 
-    @Accessor
-    BlockSoundGroup getSoundGroup();
+	@Accessor
+	BlockSoundGroup getSoundGroup();
 
-    @Accessor
-    float getSlipperiness();
+	@Accessor
+	float getSlipperiness();
 
-    @Accessor
-    float getVelocityMultiplier();
+	@Accessor
+	float getVelocityMultiplier();
 
-    @Accessor
-    boolean getDynamicBounds();
+	@Accessor
+	float getJumpVelocityMultiplier();
 
-    @Accessor
-    boolean getOpaque();
+	@Accessor
+	boolean getDynamicBounds();
 
-    @Accessor
-    boolean getIsAir();
+	@Accessor
+	boolean getOpaque();
 
-    @Accessor
-    boolean isToolRequired();
+	@Accessor
+	boolean getIsAir();
 
-    /* SETTERS */
-    @Accessor
-    void setMaterial(Material material);
+	@Accessor
+	boolean isToolRequired();
 
-    @Accessor
-    void setHardness(float hardness);
+	@Accessor
+	AbstractBlock.TypedContextPredicate<EntityType<?>> getAllowsSpawningPredicate();
 
-    @Accessor
-    void setResistance(float resistance);
+	@Accessor
+	AbstractBlock.ContextPredicate getSolidBlockPredicate();
 
-    @Accessor
-    void setCollidable(boolean collidable);
+	@Accessor
+	AbstractBlock.ContextPredicate getSuffocationPredicate();
 
-    @Accessor
-    void setRandomTicks(boolean ticksRandomly);
+	@Accessor
+	AbstractBlock.ContextPredicate getBlockVisionPredicate();
 
-    @Accessor
-    void setDynamicBounds(boolean dynamicBounds);
+	@Accessor
+	AbstractBlock.ContextPredicate getPostProcessPredicate();
 
-    @Accessor
-    void setOpaque(boolean opaque);
+	@Accessor
+	AbstractBlock.ContextPredicate getEmissiveLightingPredicate();
 
-    @Accessor
-    void setIsAir(boolean isAir);
+	/* SETTERS */
+	@Accessor
+	void setMaterial(Material material);
 
-    @Accessor
-    void setLootTableId(Identifier lootTableId);
+	@Accessor
+	void setHardness(float hardness);
 
-    @Accessor
-    void setToolRequired(boolean toolRequired);
+	@Accessor
+	void setResistance(float resistance);
 
-    // Cannot be an invoker due to conflicts in mixin: method_9631(Ljava/util/function/ToIntFunction;)Lnet/minecraft/class_4970$class_2251; for target net.minecraft.block.AbstractBlock$Settings conflicts with existing mapping field_10663:Ljava/util/function/ToIntFunction;
-    @Accessor("luminance")
-    void setLuminanceFunction(ToIntFunction<BlockState> luminanceFunction);
+	@Accessor
+	void setCollidable(boolean collidable);
 
-    /* INVOKERS */
-    @Invoker
-    AbstractBlock.Settings invokeSounds(BlockSoundGroup group);
+	@Accessor
+	void setRandomTicks(boolean ticksRandomly);
 
-    @Invoker
-    AbstractBlock.Settings invokeBreakInstantly();
+	@Accessor
+	void setMapColorProvider(Function<BlockState, MapColor> mapColorProvider);
 
-    @Invoker
-    AbstractBlock.Settings invokeStrength(float strength);
+	@Accessor
+	void setDynamicBounds(boolean dynamicBounds);
 
-    @Invoker
-    AbstractBlock.Settings invokeTicksRandomly();
+	@Accessor
+	void setOpaque(boolean opaque);
 
-    @Invoker
-    AbstractBlock.Settings invokeDropsNothing();
+	@Accessor
+	void setIsAir(boolean isAir);
+
+	@Accessor
+	void setLootTableId(Identifier lootTableId);
+
+	@Accessor
+	void setToolRequired(boolean toolRequired);
+
+	/* INVOKERS */
+	@Invoker
+	Block.Settings invokeSounds(BlockSoundGroup group);
+
+	@Invoker
+	Block.Settings invokeBreakInstantly();
+
+	@Invoker
+	Block.Settings invokeStrength(float strength);
+
+	@Invoker
+	Block.Settings invokeTicksRandomly();
+
+	@Invoker
+	Block.Settings invokeDropsNothing();
 
 }
