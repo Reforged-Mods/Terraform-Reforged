@@ -12,8 +12,8 @@ import net.minecraftforge.registries.ObjectHolder;
 
 public final class TerraformBoatInitializer {
 	private static final Identifier BOAT_ID = new Identifier("terraform", "boat");
-	@ObjectHolder("boat")
-	public static EntityType<TerraformBoatEntity> BOAT = null;
+	@ObjectHolder("terraform:boat")
+	public static final EntityType<TerraformBoatEntity> BOAT = null;
 
 	public TerraformBoatInitializer(){
 		TerraformBoatTrackedData.register();
@@ -23,10 +23,8 @@ public final class TerraformBoatInitializer {
 
 	@SubscribeEvent
 	public void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> event){
-		BOAT = EntityType.Builder.<TerraformBoatEntity>create(TerraformBoatEntity::new, SpawnGroup.MISC)
+		event.getRegistry().register(EntityType.Builder.<TerraformBoatEntity>create(TerraformBoatEntity::new, SpawnGroup.MISC)
 				.setDimensions(1.375f, 0.5625f)
-				.build(BOAT_ID.toString());
-		BOAT.setRegistryName(BOAT_ID);
-		event.getRegistry().register(BOAT);
+				.build(BOAT_ID.toString()).setRegistryName(BOAT_ID));
 	}
 }
