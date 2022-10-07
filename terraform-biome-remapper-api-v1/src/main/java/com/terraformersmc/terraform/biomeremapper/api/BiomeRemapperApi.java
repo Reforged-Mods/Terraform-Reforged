@@ -20,16 +20,7 @@ public interface BiomeRemapperApi {
 	 * BiomeRemapperApi.init() is called it must immediately register() all required biome remappings.
 	 * See the docs for register() for more details.
 	 *
-	 * To use the biome remapper API, something similar to the following must be added to fabric.mod.json
-	 * (where com.something.yourmod.init.BiomeRemapperInit is the class implementing BiomeRemapperApi):
-	 *
-	 * <pre>{@code
-	 * "entrypoints": {
-     *   "terraform-biome-remapper": [
-     *     "com.something.yourmod.init.BiomeRemapperInit"
-     *   ]
-     * }
-	 * }</pre>
+	 * To use the biome remapper API, the class that implements this interface must be annotated with {@link BiomeRemapper}
 	 */
 	void init();
 
