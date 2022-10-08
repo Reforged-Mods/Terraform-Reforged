@@ -1,5 +1,7 @@
 archivesBaseName = "terraform-biome-remapper-api-v1"
 
-dependencies {
-	modImplementation fabricApi.module("fabric-registry-sync-v0", project.fabric_version)
+loom {
+	forge{
+		mixinConfigs = ["mixins.terraform-biome-remapper.json"]
+	}
 }
