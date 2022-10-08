@@ -5,7 +5,9 @@ import com.terraformersmc.terraform.biomeremapper.impl.fix.BiomeIdFixData;
 import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.SaveProperties;
 import net.minecraft.world.level.storage.LevelStorage;
@@ -49,18 +51,18 @@ public class MixinLevelStorageSession {
 		return false;
 	}
 
-	public static Map<Identifier, Object2IntMap<Identifier>> fromNbt(NbtCompound nbt) {
-		NbtCompound mainNbt = nbt.getCompound("registries");
+	private static Map<Identifier, Object2IntMap<Identifier>> fromNbt(NbtCompound nbt) {
+		NbtCompound mainNbt = nbt.getCompound("fml").getCompound("Registries");
 		Map<Identifier, Object2IntMap<Identifier>> map = new LinkedHashMap<>();
 
 		for (String registryId : mainNbt.getKeys()) {
 			Object2IntMap<Identifier> idMap = new Object2IntLinkedOpenHashMap<>();
-			NbtCompound idNbt = mainNbt.getCompound(registryId);
-
-			for (String id : idNbt.getKeys()) {
-				idMap.put(new Identifier(id), idNbt.getInt(id));
+			NbtList idNbt = mainNbt.getCompound(registryId).getList("ids", 10);
+			for (NbtElement element : idNbt.toArray(new net.minecraft.nbt.NbtElement[0])){
+				if (element instanceof NbtCompound compound){
+					idMap.put(new Identifier(compound.getString("K")), compound.getInt("V"));
+				}
 			}
-
 			map.put(new Identifier(registryId), idMap);
 		}
 
@@ -70,7 +72,7 @@ public class MixinLevelStorageSession {
 	@Inject(method = "readLevelProperties", at = @At("HEAD"))
 	public void terraformBiomeRemapper$readWorldProperties(CallbackInfoReturnable<SaveProperties> callbackInfo) {
 		try {
-			if (terraformBiomeRemapper$readIdMapFile(new File(new File(directory.toFile(), "data"), "fabricDynamicRegistry.dat"))) {
+			if (terraformBiomeRemapper$readIdMapFile(new File(directory.toFile(), "level.dat"))) {
 				BiomeRemappings.LOGGER.info("[Registry Sync Fix] Loaded registry data");
 			}
 		} catch (FileNotFoundException e) {
