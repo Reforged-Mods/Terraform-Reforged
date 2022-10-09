@@ -3,11 +3,16 @@ package com.terraformersmc.terraform.biomeremapper.impl;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.terraformersmc.terraform.biomeremapper.api.BiomeRemapperApi;
+import net.minecraft.util.Identifier;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.forgespi.language.IModInfo;
 import net.minecraftforge.forgespi.language.ModFileScanData;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.util.TriConsumer;
@@ -26,6 +31,29 @@ public class BiomeRemappings {
 	public static final Hashtable<String, RemappingRecord> BIOME_REMAPPING_REGISTRY = new Hashtable<>(8);
 	public static final String MOD_ID = "terraform-biome-remapper";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
+	private BiomeRemappings(){
+		MinecraftForge.EVENT_BUS.addGenericListener(Biome.class, this::onRemap);
+		invokeEndpoints();
+	}
+
+	public static void init(){
+		new BiomeRemappings();
+	}
+
+	private void onRemap(RegistryEvent.MissingMappings<Biome> event){
+		for (RegistryEvent.MissingMappings.Mapping<Biome> map : event.getAllMappings()) {
+			BIOME_REMAPPING_REGISTRY.forEach((i, r) -> {
+				r.remapping.forEach((k, v) -> {
+					if (map.key.toString().equals(k)){
+						if (ForgeRegistries.BIOMES.containsKey(new Identifier(v))){
+							map.remap(ForgeRegistries.BIOMES.getValue(new Identifier(v)));
+						}
+					}
+				});
+			});
+		}
+	}
 
 	public static void invokeEndpoints() {
 		BiomeRemappings.<com.terraformersmc.terraform.biomeremapper.api.BiomeRemapper, BiomeRemapperApi>scanAnnotation(com.terraformersmc.terraform.biomeremapper.api.BiomeRemapper.class, BiomeRemapperApi.class::isAssignableFrom, (modid, plugin, clazz) -> plugin.get().init());
