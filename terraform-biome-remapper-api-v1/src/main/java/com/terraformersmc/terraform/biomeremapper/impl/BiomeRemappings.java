@@ -9,6 +9,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.forgespi.language.IModInfo;
 import net.minecraftforge.forgespi.language.ModFileScanData;
@@ -27,18 +28,15 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+@Mod(BiomeRemappings.MOD_ID)
 public class BiomeRemappings {
 	public static final Hashtable<String, RemappingRecord> BIOME_REMAPPING_REGISTRY = new Hashtable<>(8);
-	public static final String MOD_ID = "terraform-biome-remapper";
+	public static final String MOD_ID = "terraform_biome_remapper";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	private BiomeRemappings(){
+	public BiomeRemappings(){
 		MinecraftForge.EVENT_BUS.addGenericListener(Biome.class, this::onRemap);
 		invokeEndpoints();
-	}
-
-	public static void init(){
-		new BiomeRemappings();
 	}
 
 	private void onRemap(RegistryEvent.MissingMappings<Biome> event){

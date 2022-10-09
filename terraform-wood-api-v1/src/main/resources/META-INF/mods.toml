@@ -1,0 +1,25 @@
+modLoader="javafml"
+license="Apache-2.0"
+loaderVersion="[40,)"
+issueTrackerURL="https://github.com/Trinsdar/Terraform-Reforged/issues"
+
+[[mods]]
+modId="terraform_wood_api_v1"
+version="${version}"
+displayName="Terraform Wood API (v1) Reforged"
+displayURL="https://github.com/Trinsdar/Terraform-Reforged"
+credits="Terraform team for creating the original api."
+authors="Trinsdar"
+description='''A Port of the Terraform api to forge'''
+[[dependencies.terraform_wood_api_v1]]
+modId="forge"
+mandatory=true
+versionRange="[40.1.0,)"
+ordering="AFTER"
+side="BOTH"
+[[dependencies.terraform_wood_api_v1]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.18.2,)"
+ordering="AFTER"
+side="BOTH"
