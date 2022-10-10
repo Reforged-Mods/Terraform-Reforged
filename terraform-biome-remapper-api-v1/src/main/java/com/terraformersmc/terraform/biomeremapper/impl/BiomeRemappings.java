@@ -11,8 +11,11 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fml.loading.LoadingModList;
+import net.minecraftforge.forgespi.language.IModFileInfo;
 import net.minecraftforge.forgespi.language.IModInfo;
 import net.minecraftforge.forgespi.language.ModFileScanData;
+import net.minecraftforge.forgespi.locating.IModFile;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
@@ -21,9 +24,11 @@ import org.objectweb.asm.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -63,7 +68,13 @@ public class BiomeRemappings {
 
 	public static <T> void scanAnnotation(Type annotationType, Predicate<Class<T>> predicate, TriConsumer<List<String>, Supplier<T>, Class<T>> consumer) {
 		List<Triple<List<String>, Supplier<T>, Class<T>>> instances = Lists.newArrayList();
-		for (ModFileScanData data : ModList.get().getAllScanData()) {
+		List<ModFileScanData> dataList = LoadingModList.get().getMods().stream().
+				map(IModInfo::getOwningFile).
+				filter(Objects::nonNull).
+				map(IModFileInfo::getFile).
+				distinct().
+				map(IModFile::getScanResult).toList();
+		for (ModFileScanData data : dataList) {
 			List<String> modIds = data.getIModInfoData().stream()
 					.flatMap(info -> info.getMods().stream())
 					.map(IModInfo::getModId)
