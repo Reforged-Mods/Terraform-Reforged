@@ -10,6 +10,7 @@ plugins {
 allprojects {
 	apply plugin: 'maven-publish'
 	apply plugin: 'java'
+	apply plugin: 'dev.architectury.loom'
 
 
 	java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -17,24 +18,6 @@ allprojects {
 	repositories {
 		mavenLocal()
 	}
-
-	task sourcesJar(type: Jar, dependsOn: classes) {
-		classifier = "sources"
-		from sourceSets.main.allSource
-	}
-
-	tasks.withType(JavaCompile) {
-		it.options.encoding = "UTF-8"
-	}
-}
-
-subprojects {
-	apply plugin: 'dev.architectury.loom'
-
-
-	configurations { remapped }
-	artifacts.add("remapped", remapJar)
-
 
 	dependencies {
 		minecraft "com.mojang:minecraft:$project.minecraft_version"
@@ -51,6 +34,23 @@ subprojects {
 		}
 	}
 
+	task sourcesJar(type: Jar, dependsOn: classes) {
+		classifier = "sources"
+		from sourceSets.main.allSource
+	}
+
+	tasks.withType(JavaCompile) {
+		it.options.encoding = "UTF-8"
+	}
+}
+
+subprojects {
+
+
+	configurations { remapped }
+	artifacts.add("remapped", remapJar)
+	version = rootProject.version
+
 	publishing {
 		publications {
 			mavenJava(MavenPublication) {
@@ -66,43 +66,18 @@ subprojects {
 	}
 }
 
-
-
-task allJar(type: Jar, dependsOn: subprojects.remapJar) {
-	classifier = ''
-	inputs.property "version", project.version
-
-	filesMatching("META-INF/mods.toml") {
-		expand "version": project.version
-	}
-	subprojects.each { subproject ->
-		from subproject.sourceSets.main.output
-	}
-	manifest {
-		attributes([
-				"MixinConfigs": "mixins.terraform-biome-builder.json,mixins.terraform-dirt.json,mixins.terraform-leaves.json,mixins.terraform-signs.json,mixins.terraform-overworld-biome-extensions.json,mixins.terraform-tree-api-v1.json"
-		])
+loom{
+	forge{
+		mixinConfigs = ["mixins.terraform-dirt.json","mixins.terraform-leaves.json","mixins.terraform-signs.json","mixins.terraform-boats.json","mixins.terraform-tree-api-v1.json", "mixins.terraform-utils.json", "mixins.terraform-biome-remapper.json"]
 	}
 }
 
-task allSourcesJar(type: Jar, dependsOn: subprojects.sourcesJar) {
-	classifier = 'sources'
-	inputs.property "version", project.version
+archivesBaseName = "terraform-forge"
+version = "${version}"
 
-	filesMatching("META-INF/mods.toml") {
-		expand "version": project.version
+dependencies {
+	def deps = [":terraform-config-api-v1", ":terraform-dirt-api-v1", ":terraform-shapes-api-v1", ":terraform-surfaces-api-v1", ":terraform-tree-api-v1", ":terraform-utils-v1", ":terraform-wood-api-v1", ":terraform-biome-remapper-api-v1"]
+	for (String s : deps){
+		include(project(path: s, configuration: "remapped"))
 	}
-	subprojects.each { subproject ->
-		from subproject.sourceSets.main.allSource
-	}
-	manifest {
-		attributes([
-				"MixinConfigs": "mixins.terraform-biome-builder.json,mixins.terraform-dirt.json,mixins.terraform-leaves.json,mixins.terraform-signs.json,mixins.terraform-overworld-biome-extensions.json,mixins.terraform-tree-api-v1.json"
-		])
-	}
-}
-
-artifacts {
-	//archives allSourcesJar
-	//archives allJar
 }
