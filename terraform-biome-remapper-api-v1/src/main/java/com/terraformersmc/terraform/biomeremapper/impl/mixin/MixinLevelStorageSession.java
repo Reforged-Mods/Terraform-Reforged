@@ -69,7 +69,7 @@ public class MixinLevelStorageSession {
 		return map;
 	}
 
-	@Inject(method = "readLevelProperties", at = @At("HEAD"))
+	//@Inject(method = "readLevelProperties", at = @At("HEAD"))
 	public void terraformBiomeRemapper$readWorldProperties(CallbackInfoReturnable<SaveProperties> callbackInfo) {
 		try {
 			if (terraformBiomeRemapper$readIdMapFile(new File(directory.toFile(), "level.dat"))) {

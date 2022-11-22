@@ -40,7 +40,7 @@ public class BiomeRemappings {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	public BiomeRemappings(){
-		//MinecraftForge.EVENT_BUS.addGenericListener(Biome.class, this::onRemap);
+		MinecraftForge.EVENT_BUS.addGenericListener(Biome.class, this::onRemap);
 	}
 
 	private void onRemap(RegistryEvent.MissingMappings<Biome> event){
