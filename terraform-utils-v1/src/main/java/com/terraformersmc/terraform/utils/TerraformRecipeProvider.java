@@ -6,14 +6,13 @@ import net.minecraft.data.DataCache;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.server.RecipeProvider;
 import net.minecraft.util.Identifier;
-import net.minecraftforge.fml.ModLoader;
 import net.minecraftforge.fml.ModLoadingContext;
 
 import java.nio.file.Path;
 import java.util.Set;
 
-public class TeraformRecipeProvider extends RecipeProvider {
-	public TeraformRecipeProvider(DataGenerator root) {
+public class TerraformRecipeProvider extends RecipeProvider {
+	public TerraformRecipeProvider(DataGenerator root) {
 		super(root);
 	}
 
