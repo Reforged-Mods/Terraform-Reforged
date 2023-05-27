@@ -78,8 +78,10 @@ version = "${version}"
 dependencies {
 	afterEvaluate {
 		subprojects.each {
-			implementation project(path: "${it.name}", configuration: "namedElements")
-			include project("${it.name}:")
+			if (it.name != "terraform-biome-remapper-api-v1"){
+				implementation project(path: "${it.name}", configuration: "namedElements")
+				include project("${it.name}:")
+			}
 		}
 	}
 }
