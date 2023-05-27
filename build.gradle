@@ -68,7 +68,7 @@ subprojects {
 
 loom{
 	forge{
-		mixinConfigs = ["mixins.terraform-dirt.json","mixins.terraform-leaves.json","mixins.terraform-signs.json","mixins.terraform-boats.json","mixins.terraform-tree-api-v1.json", "mixins.terraform-utils.json", "mixins.terraform-biome-remapper.json"]
+		mixinConfigs = ["mixins.terraform-dirt.json","mixins.terraform-leaves.json","mixins.terraform-signs.json","mixins.terraform-boats.json","mixins.terraform-tree-api-v1.json", "mixins.terraform-utils.json"]
 	}
 }
 
