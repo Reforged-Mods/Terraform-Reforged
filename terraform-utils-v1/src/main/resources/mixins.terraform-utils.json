@@ -5,7 +5,8 @@
   "mixins": [
     "AbstractBlockAccessor",
     "AbstractBlockSettingsAccessor",
-    "FireBlockAccessor"
+    "FireBlockAccessor",
+    "VillagerTypeAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
