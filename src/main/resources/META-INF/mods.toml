@@ -14,7 +14,7 @@ description='''A Port of the Terraform api to forge'''
 [[dependencies.terraform]]
 modId="forge"
 mandatory=true
-versionRange="[40.1.73,)"
+versionRange="[40.2.3,)"
 ordering="AFTER"
 side="BOTH"
 [[dependencies.terraform]]
