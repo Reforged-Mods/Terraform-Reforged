@@ -22,7 +22,8 @@ public final class TerraformBoatClientInitializer {
 
 	@SubscribeEvent
 	public void onEvent(EntityRenderersEvent.RegisterRenderers event){
-		event.registerEntityRenderer(TerraformBoatInitializer.BOAT, TerraformBoatEntityRenderer::new);
+		EntityRendererRegistry.register(TerraformBoatInitializer.BOAT, context -> new TerraformBoatEntityRenderer(context, false));
+		EntityRendererRegistry.register(TerraformBoatInitializer.CHEST_BOAT, context -> new TerraformBoatEntityRenderer(context, true));
 	}
 
 	@SubscribeEvent

@@ -20,21 +20,24 @@ public final class TerraformBoatClientHelper {
 	/**
 	 * Gets the identifier of a {@linkplain EntityModelLayer model layer} for a boat of a given type.
 	 * @param boatId the {@linkplain net.minecraft.util.Identifier identifier} of the {@linkplain com.terraformersmc.terraform.boat.api.TerraformBoatType boat}
+	 * @param chest whether the boat contains a chest
 	 */
-	private static Identifier getLayerId(Identifier boatId) {
-		return new Identifier(boatId.getNamespace(), "boat/" + boatId.getPath());
+	private static Identifier getLayerId(Identifier boatId, boolean chest) {
+		String prefix = chest ? "chest_boat/" : "boat/";
+		return new Identifier(boatId.getNamespace(), prefix + boatId.getPath());
 	}
 
 	/**
 	 * Creates a {@linkplain EntityModelLayer model layer} for a boat of a given type.
 	 * @param boatId the {@linkplain net.minecraft.util.Identifier identifier} of the {@linkplain com.terraformersmc.terraform.boat.api.TerraformBoatType boat}
+	 * @param chest whether the boat contains a chest
 	 * 
 	 * <pre>{@code
-	 *     EntityModelLayer layer = TerraformBoatClientHelper.getLayer(new Identifier("examplemod", "mahogany"));
+	 *     EntityModelLayer layer = TerraformBoatClientHelper.getLayer(new Identifier("examplemod", "mahogany"), false);
 	 * }</pre>
 	 */
-	public static EntityModelLayer getLayer(Identifier boatId) {
-		return new EntityModelLayer(getLayerId(boatId), "main");
+	public static EntityModelLayer getLayer(Identifier boatId, boolean chest) {
+		return new EntityModelLayer(getLayerId(boatId, chest), "main");
 	}
 
 	/**
@@ -42,7 +45,7 @@ public final class TerraformBoatClientHelper {
 	 * @param boatId the {@linkplain net.minecraft.util.Identifier identifier} of the {@linkplain com.terraformersmc.terraform.boat.api.TerraformBoatType boat}
 	 * 
 	 * <pre>{@code
-	 *     TerraformBoatClientHelper.registerModelLayer(new Identifier("examplemod", "mahogany"));
+	 *     TerraformBoatClientHelper.registerModelLayer(new Identifier("examplemod", "mahogany"), false);
 	 * }</pre>
 	 */
 	public static void registerModelLayer(Identifier boatId) {

@@ -4,7 +4,6 @@ import com.terraformersmc.terraform.dirt.DirtBlocks;
 import com.terraformersmc.terraform.dirt.TerraformDirtBlockTags;
 import com.terraformersmc.terraform.dirt.TerraformDirtRegistry;
 
-import java.util.Random;
 import java.util.function.BiConsumer;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,6 +15,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.TestableWorld;
 import net.minecraft.world.gen.feature.TreeFeatureConfig;
 import net.minecraft.world.gen.trunk.TrunkPlacer;

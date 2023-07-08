@@ -31,11 +31,11 @@ import java.util.Map;
 public class MixinLevelStorageSession {
 	@Shadow
 	@Final
-	private Path directory;
+	private LevelStorage.LevelSave directory;
 
 	@Unique
 	private boolean terraformBiomeRemapper$readIdMapFile(File file) throws IOException {
-		BiomeRemappings.LOGGER.debug("Reading registry data from " + file.toString());
+		BiomeRemapper.LOGGER.debug("Reading registry data from " + file.toString());
 
 		if (file.exists()) {
 			FileInputStream fileInputStream = new FileInputStream(file);
