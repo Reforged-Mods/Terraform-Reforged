@@ -50,7 +50,7 @@ public final class TerraformBoatClientHelper {
 	 * }</pre>
 	 */
 	public static void registerModelLayer(Identifier boatId, boolean chest) {
-		TerraformBoatClientInitializer.SUPPLIER_MAP.computeIfAbsent(boatId, new Object2ObjectOpenHashMap<>()).put(chest, () -> BoatEntityModel.getTexturedModelData(chest));
+		TerraformBoatClientInitializer.SUPPLIER_MAP.computeIfAbsent(boatId, b -> new Object2ObjectOpenHashMap<>()).put(chest, () -> BoatEntityModel.getTexturedModelData(chest));
 	}
 
 	/**
