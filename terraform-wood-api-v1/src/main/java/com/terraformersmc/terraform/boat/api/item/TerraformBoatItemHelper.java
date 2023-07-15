@@ -7,20 +7,19 @@ import com.terraformersmc.terraform.boat.api.TerraformBoatType;
 import com.terraformersmc.terraform.boat.impl.item.TerraformBoatDispenserBehavior;
 import com.terraformersmc.terraform.boat.impl.item.TerraformBoatItem;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * This class provides utilities for the {@linkplain TerraformBoatItem item forms} of {@linkplain TerraformBoatType Terraform boats},
  * such as {@linkplain #registerBoatItem(Identifier, Supplier, boolean, Item.Settings) registering them and their dispenser behavior}.
  */
 public final class TerraformBoatItemHelper {
-	public static final Map<Identifier, Item> REGISTRY_MAP = new Object2ObjectLinkedOpenHashMap<>();
 	private static final ItemGroup DEFAULT_ITEM_GROUP = ItemGroup.TRANSPORTATION;
 
 	private TerraformBoatItemHelper() {
@@ -64,7 +63,7 @@ public final class TerraformBoatItemHelper {
 	 * 
 	 * <p>This method should be called twice for a given boat type for both boats and chest boats.
 	 * 
-	 * @see #registerBoatItem(Identifier, Supplier, false, Item.Settings) Helper that allows specifying a custom item settings
+	 * @see #registerBoatItem(Identifier, Supplier, boolean, Item.Settings) Helper that allows specifying a custom item settings
 	 * 
 	 * @param id the {@linkplain Identifier identifier} to register the item with
 	 * @param boatSupplier a {@linkplain Supplier supplier} for the {@linkplain TerraformBoatType Terraform boat type} that should be spawned by this item and dispenser behavior
@@ -83,6 +82,7 @@ public final class TerraformBoatItemHelper {
 	 * }</pre>
 	 * 
 	 * <p>This method should be called twice for a given boat type for both boats and chest boats.
+	 * <p>Make sure to only call this from {@link net.minecraftforge.registries.RegisterEvent}
 	 * 
 	 * @param id the {@linkplain Identifier identifier} to register the item with
 	 * @param boatSupplier a {@linkplain Supplier supplier} for the {@linkplain TerraformBoatType Terraform boat type} that should be spawned by this item and dispenser behavior
@@ -90,7 +90,7 @@ public final class TerraformBoatItemHelper {
 	 */
 	public static Item registerBoatItem(Identifier id, Supplier<TerraformBoatType> boatSupplier, boolean chest, Item.Settings settings) {
 		Item item = new TerraformBoatItem(boatSupplier, chest, settings);
-		REGISTRY_MAP.put(id, item);
+		ForgeRegistries.ITEMS.register(id, item);
 
 		registerBoatDispenserBehavior(item, boatSupplier, chest);
 		return item;

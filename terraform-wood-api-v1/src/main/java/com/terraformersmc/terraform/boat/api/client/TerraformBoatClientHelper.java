@@ -1,6 +1,7 @@
 package com.terraformersmc.terraform.boat.api.client;
 
 import com.terraformersmc.terraform.boat.impl.client.TerraformBoatClientInitializer;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.render.entity.model.BoatEntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;
@@ -48,7 +49,20 @@ public final class TerraformBoatClientHelper {
 	 *     TerraformBoatClientHelper.registerModelLayer(new Identifier("examplemod", "mahogany"), false);
 	 * }</pre>
 	 */
-	public static void registerModelLayer(Identifier boatId) {
-		TerraformBoatClientInitializer.SUPPLIER_MAP.put(boatId, BoatEntityModel::getTexturedModelData);
+	public static void registerModelLayer(Identifier boatId, boolean chest) {
+		TerraformBoatClientInitializer.SUPPLIER_MAP.computeIfAbsent(boatId, new Object2ObjectOpenHashMap<>()).put(chest, () -> BoatEntityModel.getTexturedModelData(chest));
+	}
+
+	/**
+	 * Registers {@linkplain EntityModelLayer model layers} for a given boat type.
+	 * @param boatId the {@linkplain net.minecraft.util.Identifier identifier} of the {@linkplain com.terraformersmc.terraform.boat.api.TerraformBoatType boat type}
+	 *
+	 * <pre>{@code
+	 *     TerraformBoatClientHelper.registerModelLayers(new Identifier("examplemod", "mahogany"));
+	 * }</pre>
+	 */
+	public static void registerModelLayers(Identifier boatId) {
+		registerModelLayer(boatId, false);
+		registerModelLayer(boatId, true);
 	}
 }

@@ -18,18 +18,19 @@ import java.util.function.Supplier;
 @OnlyIn(Dist.CLIENT)
 public final class TerraformBoatClientInitializer {
 
-	public static final Map<Identifier, Supplier<TexturedModelData>> SUPPLIER_MAP = new Object2ObjectLinkedOpenHashMap<>();
+	public static final Map<Identifier, Map<Boolean, Supplier<TexturedModelData>>> SUPPLIER_MAP = new Object2ObjectLinkedOpenHashMap<>();
 
 	@SubscribeEvent
 	public void onEvent(EntityRenderersEvent.RegisterRenderers event){
-		EntityRendererRegistry.register(TerraformBoatInitializer.BOAT, context -> new TerraformBoatEntityRenderer(context, false));
-		EntityRendererRegistry.register(TerraformBoatInitializer.CHEST_BOAT, context -> new TerraformBoatEntityRenderer(context, true));
+		event.registerEntityRenderer(TerraformBoatInitializer.BOAT, context -> new TerraformBoatEntityRenderer(context, false));
+		event.registerEntityRenderer(TerraformBoatInitializer.CHEST_BOAT, context -> new TerraformBoatEntityRenderer(context, true));
 	}
 
 	@SubscribeEvent
 	public void onRegisterModelLayers(EntityRenderersEvent.RegisterLayerDefinitions event){
 		SUPPLIER_MAP.forEach((i, s) -> {
-			event.registerLayerDefinition(TerraformBoatClientHelper.getLayer(i), s);
+			event.registerLayerDefinition(TerraformBoatClientHelper.getLayer(i, true), s.get(true));
+			event.registerLayerDefinition(TerraformBoatClientHelper.getLayer(i, false), s.get(false));
 		});
 	}
 }

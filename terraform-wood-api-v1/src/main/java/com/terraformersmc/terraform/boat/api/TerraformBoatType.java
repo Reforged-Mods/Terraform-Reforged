@@ -14,7 +14,7 @@ public interface TerraformBoatType {
 	/**
 	 * {@return the {@linkplain net.minecraft.entity.vehicle.BoatEntity#getPickBlockStack() pick stack} and {@linkplain Item item} dropped when the {@linkplain TerraformBoatEntity boat entity} is broken}
 	 */
-	Item item();
+	Item getItem();
 
 	/**
 	 * {@return the {@linkplain net.minecraft.entity.vehicle.BoatEntity#getPickBlockStack() pick stack} and {@linkplain Item item} dropped when the {@linkplain TerraformChestBoatEntity chest boat entity} is broken}
@@ -49,7 +49,7 @@ public interface TerraformBoatType {
 		}
 
 		/**
-		 * @see TerraformBoatType#item
+		 * @see TerraformBoatType#getItem
 		 */
 		public Builder item(Item item) {
 			this.item = item;

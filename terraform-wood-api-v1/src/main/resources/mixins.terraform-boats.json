@@ -6,6 +6,9 @@
     "MixinBoatEntity",
     "MixinShulkerEntity"
   ],
+  "client": [
+    "MixinBoatEntityRenderer"
+  ],
   "injectors": {
     "defaultRequire": 1
   },

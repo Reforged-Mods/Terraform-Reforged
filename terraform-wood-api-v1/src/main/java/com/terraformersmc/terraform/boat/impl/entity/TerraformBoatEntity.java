@@ -53,7 +53,7 @@ public class TerraformBoatEntity extends BoatEntity implements TerraformBoatHold
 
 	@Override
 	public Item asItem() {
-		return this.getTerraformBoat().item();
+		return this.getTerraformBoat().getItem();
 	}
 
 	@Override
