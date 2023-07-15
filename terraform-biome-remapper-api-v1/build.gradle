@@ -1,7 +1,0 @@
-archivesBaseName = "terraform-biome-remapper-api-v1"
-
-loom {
-	forge{
-		mixinConfigs = ["mixins.terraform-biome-remapper.json"]
-	}
-}

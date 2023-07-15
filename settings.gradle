@@ -6,14 +6,13 @@ pluginManagement {
 			url = 'https://maven.fabricmc.net/'
 		}
 		maven { url "https://maven.architectury.dev/" }
-		maven { url "https://maven.minecraftforge.net/" }
+		maven { url "https://maven.neoforged.net/" }
 		gradlePluginPortal()
 		mavenCentral()
     }
 }
 
 
-include 'terraform-biome-remapper-api-v1'
 include 'terraform-config-api-v1'
 include 'terraform-dirt-api-v1'
 include 'terraform-shapes-api-v1'
