@@ -47,6 +47,14 @@ public class TerraformBoatEntityRenderer extends BoatEntityRenderer {
 		return super.getTexture(entity);
 	}
 
+	@Override
+	public Pair<Identifier, BoatEntityModel> getModelWithLocation(BoatEntity boat) {
+		if (boat instanceof TerraformBoatHolder terraformBoatHolder) {
+			return getTextureAndModel(terraformBoatHolder);
+		}
+		return super.getModelWithLocation(boat);
+	}
+
 	public Pair<Identifier, BoatEntityModel> getTextureAndModel(TerraformBoatHolder holder) {
 		return this.texturesAndModels.get(holder.getTerraformBoat());
 	}
