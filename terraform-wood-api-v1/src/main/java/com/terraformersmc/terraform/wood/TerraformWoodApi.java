@@ -12,7 +12,6 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 @Mod("terraform_wood_api_v1")
 public class TerraformWoodApi {
 	public TerraformWoodApi(){
-		FMLJavaModLoadingContext.get().getModEventBus().register(this);
 		new TerraformBoatInitializer();
 		if (FMLEnvironment.dist == Dist.CLIENT){
 			FMLJavaModLoadingContext.get().getModEventBus().register(new TerraformBoatClientInitializer());
