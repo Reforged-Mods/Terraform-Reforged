@@ -33,11 +33,4 @@ public class MixinRenderLayers {
 			info.setReturnValue(fancyGraphicsOrBetter ? RenderLayer.getCutoutMipped() : RenderLayer.getSolid());
 		}
 	}
-
-	@Inject(method = "canRenderInLayer", at = @At("HEAD"), cancellable = true)
-	private static void onCanRenderInLayer(BlockState state, RenderLayer type, CallbackInfoReturnable<Boolean> info) {
-		if (state.getBlock() instanceof ExtendedLeavesBlock || (state.getBlock() instanceof SmallLogBlock && state.get(SmallLogBlock.HAS_LEAVES))) {
-			info.setReturnValue(fancyGraphicsOrBetter ? type == RenderLayer.getCutoutMipped() : type == RenderLayer.getSolid());
-		}
-	}
 }
