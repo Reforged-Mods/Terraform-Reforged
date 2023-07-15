@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
 import net.minecraft.data.DataCache;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.DataWriter;
 import net.minecraft.data.server.RecipeProvider;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -17,8 +18,7 @@ public class TerraformRecipeProvider extends RecipeProvider {
 	}
 
 	@Override
-	public void run(DataCache cache) {
-		Path path = this.root.getOutput();
+	public void run(DataWriter cache) {
 		Set<Identifier> generatedRecipes = Sets.newHashSet();
 		generate(provider -> {
 			Identifier identifier = getRecipeIdentifier(provider.getRecipeId());
@@ -29,11 +29,11 @@ public class TerraformRecipeProvider extends RecipeProvider {
 
 			JsonObject recipeJson = provider.toJson();
 
-			saveRecipe(cache, recipeJson, path.resolve("data/" + identifier.getNamespace() + "/recipes/" + identifier.getPath() + ".json"));
+			saveRecipe(cache, recipeJson, this.recipesPathResolver.resolveJson(identifier));
 			JsonObject advancementJson = provider.toAdvancementJson();
 
 			if (advancementJson != null) {
-				saveRecipeAdvancement(cache, advancementJson, path.resolve("data/" + identifier.getNamespace() + "/advancements/" + provider.getAdvancementId().getPath() + ".json"));
+				saveRecipeAdvancement(cache, advancementJson, this.advancementsPathResolver.resolveJson(getRecipeIdentifier(provider.getAdvancementId())));
 			}
 		});
 	}
