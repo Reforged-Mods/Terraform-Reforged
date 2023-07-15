@@ -15,11 +15,11 @@ import net.minecraftforge.registries.RegisterEvent;
 public final class TerraformBoatInitializer {
 	private static final EntityDimensions DIMENSIONS = EntityDimensions.fixed(1.375f, 0.5625f);
 	private static final Identifier BOAT_ID = new Identifier("terraform", "boat");
-	@ObjectHolder(registryName = "minecraft:item", value = "terraform:boat")
+	@ObjectHolder(registryName = "minecraft:entity_type", value = "terraform:boat")
 	public static final EntityType<TerraformBoatEntity> BOAT = null;
 
 	private static final Identifier CHEST_BOAT_ID = new Identifier("terraform", "chest_boat");
-	@ObjectHolder(registryName = "minecraft:item", value = "terraform:chest_boat")
+	@ObjectHolder(registryName = "minecraft:entity_type", value = "terraform:chest_boat")
 	public static final EntityType<TerraformChestBoatEntity> CHEST_BOAT = null;
 	public TerraformBoatInitializer(){
 		TerraformBoatTrackedData.register();
