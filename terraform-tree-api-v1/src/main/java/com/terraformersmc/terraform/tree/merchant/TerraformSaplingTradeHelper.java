@@ -2,7 +2,6 @@ package com.terraformersmc.terraform.tree.merchant;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Consumer;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;

@@ -29,7 +29,6 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
-import java.util.Random;
 
 /**
  * A leaves block with extended range, permitting leaves to be as far as 13 blocks away from the tree rather than the
@@ -137,10 +136,10 @@ public class ExtendedLeavesBlock extends Block implements IForgeShearable {
 		List<ItemStack> list = super.getDroppedStacks(state, builder);
 		if (ModList.get().isLoaded("antimatter")){
 			ItemStack stack = builder.get(LootContextParameters.TOOL);
-			if (stack != null && !stack.isEmpty() && stack.getItem().getRegistryName().toString().equals("antimatter:branch_cutter")){
+			if (stack != null && !stack.isEmpty() && ForgeRegistries.ITEMS.getKey(stack.getItem()).toString().equals("antimatter:branch_cutter")){
 				ItemStack sapling = ItemStack.EMPTY;
-				if (ForgeRegistries.BLOCKS.containsKey(new Identifier(this.getRegistryName().toString().replace("leaves", "sapling")))){
-					sapling = new ItemStack(ForgeRegistries.BLOCKS.getValue(new Identifier(this.getRegistryName().toString().replace("leaves", "sapling"))));
+				if (ForgeRegistries.BLOCKS.containsKey(new Identifier(ForgeRegistries.BLOCKS.getKey(this).toString().replace("leaves", "sapling")))){
+					sapling = new ItemStack(ForgeRegistries.BLOCKS.getValue(new Identifier(ForgeRegistries.BLOCKS.getKey(this).toString().replace("leaves", "sapling"))));
 				}
 				if (!sapling.isEmpty()){
 					list.clear();
