@@ -50,6 +50,7 @@ subprojects {
 	configurations { remapped }
 	artifacts.add("remapped", remapJar)
 	version = rootProject.version
+	group = rootProject.maven_group
 
 	publishing {
 		publications {
@@ -61,6 +62,21 @@ subprojects {
 				artifact(sourcesJar) {
 					builtBy remapSourcesJar
 				}
+			}
+		}
+		setupRepositories(repositories)
+	}
+}
+
+void setupRepositories(RepositoryHandler repositories) {
+	//repositories.mavenLocal() // uncomment for testing
+	def ENV = System.getenv()
+	repositories.maven {
+		url "https://repo.repsy.io/mvn/trinsdar/reforged-mods"
+		if (ENV.GITHUB_ACTION) {
+			credentials {
+				username ENV.MAVEN_USERNAME
+				password ENV.MAVEN_PASSWORD
 			}
 		}
 	}
