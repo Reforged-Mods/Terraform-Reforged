@@ -4,7 +4,7 @@ import org.gradle.jvm.toolchain.JavaLanguageVersion
 plugins {
 	id 'java'
 	id 'maven-publish'
-	id 'dev.architectury.loom' version '0.12.0-SNAPSHOT' apply false
+	id 'dev.architectury.loom' version '1.4-SNAPSHOT' apply false
 }
 
 allprojects {
@@ -35,7 +35,7 @@ allprojects {
 	}
 
 	task sourcesJar(type: Jar, dependsOn: classes) {
-		classifier = "sources"
+		archiveClassifier.set "sources"
 		from sourceSets.main.allSource
 	}
 
@@ -86,10 +86,14 @@ archivesBaseName = "terraform-forge"
 version = "${version}"
 
 dependencies {
+	subprojects.each {
+		if (it.name != "terraform-biome-remapper-api-v1"){
+			implementation project(path: "${it.name}", configuration: "namedElements")
+		}
+	}
 	afterEvaluate {
 		subprojects.each {
 			if (it.name != "terraform-biome-remapper-api-v1"){
-				implementation project(path: "${it.name}", configuration: "namedElements")
 				include project("${it.name}:")
 			}
 		}
