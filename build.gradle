@@ -72,13 +72,7 @@ void setupRepositories(RepositoryHandler repositories) {
 	//repositories.mavenLocal() // uncomment for testing
 	def ENV = System.getenv()
 	repositories.maven {
-		url "https://repo.repsy.io/mvn/trinsdar/reforged-mods"
-		if (ENV.GITHUB_ACTION) {
-			credentials {
-				username ENV.MAVEN_USERNAME
-				password ENV.MAVEN_PASSWORD
-			}
-		}
+		url System.getenv("local_maven_url")
 	}
 }
 
