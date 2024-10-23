@@ -4,7 +4,7 @@ import org.gradle.jvm.toolchain.JavaLanguageVersion
 plugins {
 	id 'java'
 	id 'maven-publish'
-	id 'dev.architectury.loom' version '1.4-SNAPSHOT' apply false
+	id 'dev.architectury.loom' version '1.6-SNAPSHOT' apply false
 }
 
 allprojects {
@@ -56,12 +56,7 @@ subprojects {
 		publications {
 			mavenJava(MavenPublication) {
 				// add all the jars that should be included when publishing to maven
-				artifact(remapJar) {
-					builtBy remapJar
-				}
-				artifact(sourcesJar) {
-					builtBy remapSourcesJar
-				}
+				from components.java
 			}
 		}
 		setupRepositories(repositories)
