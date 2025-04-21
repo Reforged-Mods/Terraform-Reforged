@@ -1,7 +1,0 @@
-archivesBaseName = "terraform-utils-v1"
-
-loom {
-	forge{
-		mixinConfigs = ["mixins.terraform-utils.json"]
-	}
-}

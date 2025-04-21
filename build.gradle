@@ -4,26 +4,61 @@ import org.gradle.jvm.toolchain.JavaLanguageVersion
 plugins {
 	id 'java'
 	id 'maven-publish'
-	id 'dev.architectury.loom' version '1.6-SNAPSHOT' apply false
+	id "xyz.wagyourtail.unimined" version "1.2.9" apply false
 }
 
-allprojects {
+subprojects {
+	apply plugin: "xyz.wagyourtail.unimined"
+	apply plugin: "java"
 	apply plugin: 'maven-publish'
-	apply plugin: 'java'
-	apply plugin: 'dev.architectury.loom'
 
+	archivesBaseName = project.name
 
-	java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+	version = rootProject.mod_version
+	group = rootProject.maven_group
 
-	repositories {
-		mavenLocal()
+	configurations {
+		modCompileOnly
+		compileOnly.extendsFrom modCompileOnly
+		modApi
+		api.extendsFrom modApi
 	}
 
-	dependencies {
-		minecraft "com.mojang:minecraft:$project.minecraft_version"
-		mappings "net.fabricmc:yarn:$project.yarn_mappings:v2"
+	unimined.minecraft(sourceSets.main, true) {
+		version rootProject.minecraft_version
 
-		forge "net.minecraftforge:forge:$project.minecraft_version-$project.forge_version"
+		mappings {
+			intermediary()
+			yarn(rootProject.yarn_mappings)
+			devNamespace "yarn"
+			devFallbackNamespace "intermediary"
+		}
+
+		minecraftForge {
+			loader forge_version
+			if (project.hasProperty("mixins")){
+				mixinConfig(project.getProperties().get("mixins"))
+			}
+		}
+
+		mods {
+			remap(configurations.modCompileOnly) {
+				catchAWNamespaceAssertion()
+			}
+
+			remap(configurations.modApi)
+
+			// this is basically just a shortcut for `remap(configurations.modImplementation)`
+			modImplementation {
+				// you can do this is mods have the wrong access widener mapping, but it may break runs
+				catchAWNamespaceAssertion()
+			}
+		}
+	}
+
+	tasks.withType(JavaCompile).configureEach {
+		it.options.encoding = 'UTF-8'
+		it.options.getRelease().set(17)
 	}
 
 	processResources {
@@ -34,23 +69,9 @@ allprojects {
 		}
 	}
 
-	task sourcesJar(type: Jar, dependsOn: classes) {
-		archiveClassifier.set "sources"
-		from sourceSets.main.allSource
+	java {
+		withSourcesJar()
 	}
-
-	tasks.withType(JavaCompile) {
-		it.options.encoding = "UTF-8"
-	}
-}
-
-subprojects {
-
-
-	configurations { remapped }
-	artifacts.add("remapped", remapJar)
-	version = rootProject.version
-	group = rootProject.maven_group
 
 	publishing {
 		publications {
@@ -68,23 +89,5 @@ void setupRepositories(RepositoryHandler repositories) {
 	def ENV = System.getenv()
 	repositories.maven {
 		url System.getenv("local_maven_url")
-	}
-}
-
-archivesBaseName = "terraform-forge"
-version = "${version}"
-
-dependencies {
-	subprojects.each {
-		if (it.name != "terraform-biome-remapper-api-v1"){
-			implementation project(path: "${it.name}", configuration: "namedElements")
-		}
-	}
-	afterEvaluate {
-		subprojects.each {
-			if (it.name != "terraform-biome-remapper-api-v1"){
-				include project("${it.name}:")
-			}
-		}
 	}
 }
