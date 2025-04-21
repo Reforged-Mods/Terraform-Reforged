@@ -24,7 +24,7 @@ subprojects {
 		api.extendsFrom modApi
 	}
 
-	unimined.minecraft(sourceSets.main, true) {
+	unimined.minecraft(sourceSets.main) {
 		version rootProject.minecraft_version
 
 		mappings {
