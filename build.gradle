@@ -37,7 +37,7 @@ subprojects {
 		minecraftForge {
 			loader forge_version
 			if (project.hasProperty("mixins")){
-				mixinConfig(project.getProperties().get("mixins"))
+				mixinConfig(project.getProperties().get("mixins").split(","))
 			}
 		}
 
