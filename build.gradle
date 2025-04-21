@@ -40,9 +40,8 @@ subprojects {
 				mixinConfig(project.getProperties().get("mixins").split(","))
 			}
 			var at = project.file("src/main/resources/META-INF/accesstransformer.cfg")
-			System.out.println(at)
 			if (at.exists()){
-				accessTransformer at
+				accessTransformer(at)
 			}
 
 		}
