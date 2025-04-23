@@ -2,61 +2,76 @@ package com.terraformersmc.terraform.wood.block;
 
 import java.util.function.Supplier;
 
+import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.MapColor;
 import net.minecraft.block.PillarBlock;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.MiningToolItem;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.util.math.Direction;
 
+/**
+ * <p>This class is deprecated in favor of using PillarBlock and Fabric's StrippableBlockRegistry.
+ * However, we are providing factory methods in PillarLogHelper until Mojang makes map colors easier.</p>
+ *
+ * <pre>{@code
+ *     PillarBlock logBlock = PillarLogHelper.of(woodColor, barkColor);
+ *     PillarBlock strippedBlock = PillarLogHelper.of(woodColor);
+ *     StrippableBlockRegistry.register(logBlock, strippedBlock);
+ * }</pre>
+ */
+@Deprecated(forRemoval = true, since = "6.1.0")
 public class StrippableLogBlock extends PillarBlock {
-	private Supplier<Block> stripped;
-
+	/**
+	 * <p>This class is deprecated in favor of using PillarBlock and Fabric's StrippableBlockRegistry.
+	 * However, we are providing factory methods in PillarLogHelper until Mojang makes map colors easier.</p>
+	 *
+	 * <pre>{@code
+	 *     PillarBlock logBlock = PillarLogHelper.of(woodColor, barkColor);
+	 *     PillarBlock strippedBlock = PillarLogHelper.of(woodColor);
+	 *     StrippableBlockRegistry.register(logBlock, strippedBlock);
+	 * }</pre>
+	 *
+	 * @param stripped Supplier of default BlockState for stripped variant
+	 * @param top Ignored (not implemented)
+	 * @param settings Block Settings for log 
+	 */
 	public StrippableLogBlock(Supplier<Block> stripped, MapColor top, Settings settings) {
 		super(settings);
 
-		this.stripped = stripped;
+		if (stripped != null) {
+			StrippableBlockRegistry.register(this, stripped.get());
+		}
 	}
 
-	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		ItemStack heldStack = player.getEquippedStack(hand == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
+	/**
+	 * Use {@code PillarLogHelper.of(color) } instead.
+	 *
+	 * @param color Map color for all faces of log
+	 * @return New PillarBlock
+	 */
+	public static PillarBlock of(MapColor color) {
+		return new PillarBlock(AbstractBlock.Settings.create()
+				.mapColor(color)
+				.strength(2.0F)
+				.sounds(BlockSoundGroup.WOOD)
+				.burnable()
+		);
+	}
 
-		if(heldStack.isEmpty()) {
-			return ActionResult.FAIL;
-		}
-
-		Item held = heldStack.getItem();
-		if(!(held instanceof MiningToolItem)) {
-			return ActionResult.FAIL;
-		}
-
-		MiningToolItem tool = (MiningToolItem) held;
-
-		if(stripped != null && (tool.getMiningSpeedMultiplier(heldStack, state) > 1.0F)) {
-			world.playSound(player, pos, SoundEvents.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0F, 1.0F);
-
-			if(!world.isClient) {
-				BlockState target = stripped.get().getDefaultState().with(PillarBlock.AXIS, state.get(PillarBlock.AXIS));
-
-				world.setBlockState(pos, target);
-
-				heldStack.damage(1, player, consumedPlayer -> consumedPlayer.sendToolBreakStatus(hand));
-			}
-
-			return ActionResult.SUCCESS;
-		}
-
-		return ActionResult.FAIL;
+	/**
+	 * Use {@code PillarLogHelper.of(woodColor, barkColor) } instead.
+	 *
+	 * @param wood Map color for non-bark faces of log (ends)
+	 * @param bark Map color for bark faces of log (sides)
+	 * @return New PillarBlock
+	 */
+	public static PillarBlock of(MapColor wood, MapColor bark) {
+		return new PillarBlock(AbstractBlock.Settings.create()
+				.mapColor((state) -> Direction.Axis.Y.equals(state.get(PillarBlock.AXIS)) ? wood : bark)
+				.strength(2.0F)
+				.sounds(BlockSoundGroup.WOOD)
+				.burnable()
+		);
 	}
 }

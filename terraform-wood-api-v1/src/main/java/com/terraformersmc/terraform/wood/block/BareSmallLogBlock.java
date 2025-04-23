@@ -2,28 +2,21 @@ package com.terraformersmc.terraform.wood.block;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.Waterloggable;
+import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
+import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.MiningToolItem;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -42,6 +35,7 @@ import java.util.function.Supplier;
  * Used for things like the Saguaro Cactus.
  */
 public class BareSmallLogBlock extends Block implements Waterloggable {
+	public static final EnumProperty<Direction.Axis> AXIS = Properties.AXIS;
 	public static final BooleanProperty UP = Properties.UP;
 	public static final BooleanProperty DOWN = Properties.DOWN;
 	public static final BooleanProperty NORTH = Properties.NORTH;
@@ -50,37 +44,92 @@ public class BareSmallLogBlock extends Block implements Waterloggable {
 	public static final BooleanProperty WEST = Properties.WEST;
 	public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
-	private static final int UP_MASK = 1 << Direction.UP.ordinal();
-	private static final int DOWN_MASK = 1 << Direction.DOWN.ordinal();
-	private static final int NORTH_MASK = 1 << Direction.NORTH.ordinal();
-	private static final int EAST_MASK = 1 << Direction.EAST.ordinal();
-	private static final int SOUTH_MASK = 1 << Direction.SOUTH.ordinal();
-	private static final int WEST_MASK = 1 << Direction.WEST.ordinal();
+	protected static final int UP_MASK = 1 << Direction.UP.ordinal();
+	protected static final int DOWN_MASK = 1 << Direction.DOWN.ordinal();
+	protected static final int NORTH_MASK = 1 << Direction.NORTH.ordinal();
+	protected static final int EAST_MASK = 1 << Direction.EAST.ordinal();
+	protected static final int SOUTH_MASK = 1 << Direction.SOUTH.ordinal();
+	protected static final int WEST_MASK = 1 << Direction.WEST.ordinal();
+
+	protected final int LOG_RADIUS = 5;
 
 	protected final VoxelShape[] collisionShapes;
 	protected final VoxelShape[] boundingShapes;
-	private final Object2IntMap<BlockState> SHAPE_INDEX_CACHE = new Object2IntOpenHashMap<>();
+	protected final Object2IntMap<BlockState> SHAPE_INDEX_CACHE = new Object2IntOpenHashMap<>();
 
-	private final Supplier<Block> stripped;
-
-	public BareSmallLogBlock(Supplier<Block> stripped, Block.Settings settings) {
+	public BareSmallLogBlock(AbstractBlock.Settings settings) {
 		super(settings);
-		this.setDefaultState(this.getStateManager().getDefaultState()
-			.with(UP, false)
-			.with(DOWN, false)
-			.with(WEST, false)
-			.with(EAST, false)
-			.with(NORTH, false)
-			.with(SOUTH, false)
-			.with(WATERLOGGED, false)
+		this.setDefaultState(this.stateManager.getDefaultState()
+				.with(AXIS, Direction.Axis.Y)
+				.with(UP, false)
+				.with(DOWN, false)
+				.with(WEST, false)
+				.with(EAST, false)
+				.with(NORTH, false)
+				.with(SOUTH, false)
+				.with(WATERLOGGED, false)
 		);
 
-		this.collisionShapes = this.createShapes(5);
-		this.boundingShapes = this.createShapes(5);
-		this.stripped = stripped;
+		this.collisionShapes = this.createShapes(LOG_RADIUS);
+		this.boundingShapes = this.createShapes(LOG_RADIUS);
 	}
 
-	private int getShapeIndex(BlockState requested) {
+	/**
+	 * <p>This constructor is deprecated in favor of using the new BareSmallLogBlock.of() factories
+	 * and Fabric's StrippableBlockRegistry.</p>
+	 *
+	 * <pre>{@code
+	 *     BareSmallLogBlock logBlock = BareSmallLogBlock.of(woodColor, barkColor);
+	 *     BareSmallLogBlock strippedBlock = BareSmallLogBlock.of(woodColor);
+	 *     StrippableBlockRegistry.register(logBlock, strippedBlock);
+	 * }</pre>
+	 *
+	 * @param stripped Supplier of default BlockState for stripped variant
+	 * @param settings Block Settings for log
+	 */
+	@Deprecated(forRemoval = true, since = "6.1.0")
+	public BareSmallLogBlock(Supplier<Block> stripped, AbstractBlock.Settings settings) {
+		this(settings);
+
+		if (stripped != null) {
+			StrippableBlockRegistry.register(this, stripped.get());
+		}
+	}
+
+	/**
+	 * Factory to create a BareSmallLogBlock with default settings and
+	 * the same map color on all block faces.
+	 *
+	 * @param color Map color for all faces of log
+	 * @return New BareSmallLogBlock
+	 */
+	public static BareSmallLogBlock of(MapColor color) {
+		return new BareSmallLogBlock(AbstractBlock.Settings.create()
+				.mapColor(color)
+				.strength(2.0F)
+				.sounds(BlockSoundGroup.WOOD)
+				.burnable()
+		);
+	}
+
+	/**
+	 * Factory to create a BareSmallLogBlock with default settings and
+	 * different map colors on the top/bottom versus the sides.
+	 *
+	 * @param wood Map color for non-bark faces of log (ends)
+	 * @param bark Map color for bark faces of log (sides)
+	 * @return New BareSmallLogBlock
+	 */
+	public static BareSmallLogBlock of(MapColor wood, MapColor bark) {
+		return new BareSmallLogBlock(AbstractBlock.Settings.create()
+				.mapColor((state) -> state.get(UP) ? wood : bark)
+				.strength(2.0F)
+				.sounds(BlockSoundGroup.WOOD)
+				.burnable()
+		);
+	}
+
+	protected int getShapeIndex(BlockState requested) {
 		return this.SHAPE_INDEX_CACHE.computeIntIfAbsent(requested, state -> {
 			int mask = 0;
 
@@ -164,45 +213,11 @@ public class BareSmallLogBlock extends Block implements Waterloggable {
 		return shapes;
 	}
 
-
-
-	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult result) {
-		ItemStack held = player.getStackInHand(hand);
-
-		if(stripped != null && held.getItem() instanceof MiningToolItem) {
-			MiningToolItem tool = (MiningToolItem) held.getItem();
-
-			if(tool.getMiningSpeedMultiplier(held, state) > 1.0F) {
-				world.playSound(player, pos, SoundEvents.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0F, 1.0F);
-
-				if(!world.isClient) {
-					BlockState target = stripped.get().getDefaultState()
-						.with(BareSmallLogBlock.UP, state.get(BareSmallLogBlock.UP))
-						.with(BareSmallLogBlock.DOWN, state.get(BareSmallLogBlock.DOWN))
-						.with(BareSmallLogBlock.NORTH, state.get(BareSmallLogBlock.NORTH))
-						.with(BareSmallLogBlock.SOUTH, state.get(BareSmallLogBlock.SOUTH))
-						.with(BareSmallLogBlock.EAST, state.get(BareSmallLogBlock.EAST))
-						.with(BareSmallLogBlock.WEST, state.get(BareSmallLogBlock.WEST))
-						.with(BareSmallLogBlock.WATERLOGGED, state.get(BareSmallLogBlock.WATERLOGGED));
-
-					world.setBlockState(pos, target);
-
-					held.damage(1, player, consumedPlayer -> consumedPlayer.sendToolBreakStatus(hand));
-				}
-
-				return ActionResult.SUCCESS;
-			}
-		}
-
-		return ActionResult.FAIL;
-	}
-
 	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
 		super.appendProperties(builder);
 
-		builder.add(UP, DOWN, NORTH, SOUTH, EAST, WEST, WATERLOGGED);
+		builder.add(AXIS, UP, DOWN, NORTH, SOUTH, EAST, WEST, WATERLOGGED);
 	}
 
 	private boolean shouldConnectTo(BlockState state, boolean solid) {
@@ -281,29 +296,24 @@ public class BareSmallLogBlock extends Block implements Waterloggable {
 
 	@Override
 	public BlockState rotate(BlockState state, BlockRotation rotation) {
-		switch (rotation) {
-			case CLOCKWISE_180:
-				return state.with(NORTH, state.get(SOUTH)).with(EAST, state.get(WEST)).with(SOUTH, state.get(NORTH)).with(WEST, state.get(EAST));
-			case COUNTERCLOCKWISE_90:
-				return state.with(NORTH, state.get(EAST)).with(EAST, state.get(SOUTH)).with(SOUTH, state.get(WEST)).with(WEST, state.get(NORTH));
-			case CLOCKWISE_90:
-				return state.with(NORTH, state.get(WEST)).with(EAST, state.get(NORTH)).with(SOUTH, state.get(EAST)).with(WEST, state.get(SOUTH));
-			default:
-				return state;
-		}
-
+		return switch (rotation) {
+			case CLOCKWISE_180 ->
+					state.with(NORTH, state.get(SOUTH)).with(EAST, state.get(WEST)).with(SOUTH, state.get(NORTH)).with(WEST, state.get(EAST));
+			case COUNTERCLOCKWISE_90 ->
+					state.with(NORTH, state.get(EAST)).with(EAST, state.get(SOUTH)).with(SOUTH, state.get(WEST)).with(WEST, state.get(NORTH));
+			case CLOCKWISE_90 ->
+					state.with(NORTH, state.get(WEST)).with(EAST, state.get(NORTH)).with(SOUTH, state.get(EAST)).with(WEST, state.get(SOUTH));
+			default -> state;
+		};
 	}
 
 	@Override
 	public BlockState mirror(BlockState state, BlockMirror mirror) {
-		switch (mirror) {
-			case LEFT_RIGHT:
-				return state.with(NORTH, state.get(SOUTH)).with(SOUTH, state.get(NORTH));
-			case FRONT_BACK:
-				return state.with(EAST, state.get(WEST)).with(WEST, state.get(EAST));
-			default:
-				return super.mirror(state, mirror);
-		}
+		return switch (mirror) {
+			case LEFT_RIGHT -> state.with(NORTH, state.get(SOUTH)).with(SOUTH, state.get(NORTH));
+			case FRONT_BACK -> state.with(EAST, state.get(WEST)).with(WEST, state.get(EAST));
+			default -> super.mirror(state, mirror);
+		};
 	}
 
 	@Override
@@ -313,7 +323,7 @@ public class BareSmallLogBlock extends Block implements Waterloggable {
 
 	public BlockState getNeighborUpdateState(BlockState state, Direction fromDirection, BlockState neighbor, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
 		if (state.get(WATERLOGGED)) {
-			world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
 		}
 
 		boolean up = fromDirection == Direction.UP && this.shouldConnectTo(neighbor, neighbor.isSideSolidFullSquare(world, neighborPos, Direction.DOWN)) || state.get(UP);
@@ -333,7 +343,7 @@ public class BareSmallLogBlock extends Block implements Waterloggable {
 	}
 
 	@Override
-	public boolean isTranslucent(BlockState state, BlockView view, BlockPos pos) {
+	public boolean isTransparent(BlockState state, BlockView world, BlockPos pos) {
 		return !state.get(WATERLOGGED);
 	}
 
@@ -345,5 +355,23 @@ public class BareSmallLogBlock extends Block implements Waterloggable {
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
 		return this.collisionShapes[this.getShapeIndex(state)];
+	}
+
+	/**
+	 * You can call this method on Terraformers API small logs to get the log radius.
+	 * The trunk will occupy 2*getLogRadius() centered in the block.
+	 *
+	 * <pre>{@code
+	 *     int logRadius = 8;
+	 *     if (block instanceof BareSmallLogBlock smallLogBlock) {
+	 *         logRadius = smallLogBlock.getLogRadius();
+	 *     }
+	 * }</pre>
+	 *
+	 * @return The radius of the log
+	 */
+	@SuppressWarnings("unused")
+	public int getLogRadius() {
+		return LOG_RADIUS;
 	}
 }

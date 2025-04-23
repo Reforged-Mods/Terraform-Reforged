@@ -2,41 +2,148 @@ package com.terraformersmc.terraform.wood.block;
 
 import java.util.function.Supplier;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.MapColor;
-import net.minecraft.block.PillarBlock;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
+import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
+import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.MiningToolItem;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 
 /**
  * A log block that has 4 different corners that combine together to form a huge and continuous 2x2 log.
  * Used for the mega variants of Redwood, Fir, etc
  */
+@SuppressWarnings("unused")
 public class QuarterLogBlock extends PillarBlock {
 	public static final EnumProperty<BarkSide> BARK_SIDE = EnumProperty.of("bark_side", BarkSide.class);
-	private final Supplier<Block> stripped;
 
-	public QuarterLogBlock(Supplier<Block> stripped, MapColor color, Block.Settings settings) {
+	public QuarterLogBlock(AbstractBlock.Settings settings) {
 		super(settings);
 
-		this.stripped = stripped;
+		this.setDefaultState(this.stateManager.getDefaultState()
+				.with(AXIS, Direction.Axis.Y)
+				.with(BARK_SIDE, BarkSide.NORTHEAST));
+	}
+
+	/**
+	 * <p>This constructor is deprecated in favor of using the new QuarterLogBlock.of() factories
+	 * and Fabric's StrippableBlockRegistry.</p>
+	 *
+	 * <pre>{@code
+	 *     QuarterLogBlock logBlock = QuarterLogBlock.of(woodColor, barkColor);
+	 *     QuarterLogBlock strippedBlock = QuarterLogBlock.of(woodColor);
+	 *     StrippableBlockRegistry.register(logBlock, strippedBlock);
+	 * }</pre>
+	 *
+	 * @param stripped Supplier of default BlockState for stripped variant
+	 * @param color Ignored (never implemented)
+	 * @param settings Block Settings for log
+	 */
+	@Deprecated(forRemoval = true, since = "6.1.0")
+	public QuarterLogBlock(Supplier<Block> stripped, MapColor color, AbstractBlock.Settings settings) {
+		this(settings);
+
+		if (stripped != null) {
+			StrippableBlockRegistry.register(this, stripped.get());
+		}
+	}
+
+	/**
+	 * Factory to create a QuarterLogBlock with default settings and
+	 * the same map color on all block faces.
+	 *
+	 * @param color Map color for all faces of log
+	 * @return New QuarterLogBlock
+	 */
+	public static QuarterLogBlock of(MapColor color) {
+		return new QuarterLogBlock(AbstractBlock.Settings.create()
+				.mapColor(color)
+				.strength(2.0F)
+				.sounds(BlockSoundGroup.WOOD)
+				.burnable()
+		);
+	}
+
+	/**
+	 * Factory to create a QuarterLogBlock with default settings and
+	 * different map colors on the exposed wood versus the bark sides.
+	 *
+	 * @param wood Map color for non-bark faces of log
+	 * @param bark Map color for bark faces of log
+	 * @return New QuarterLogBlock
+	 */
+	public static QuarterLogBlock of(MapColor wood, MapColor bark) {
+		return new QuarterLogBlock(AbstractBlock.Settings.create()
+				.mapColor(
+						(state) ->
+								switch (state.get(PillarBlock.AXIS)) {
+									case Y -> wood;
+									case X ->
+											switch (state.get(QuarterLogBlock.BARK_SIDE)) {
+												case NORTHWEST, SOUTHWEST -> bark;
+												case NORTHEAST, SOUTHEAST -> wood;
+											};
+									case Z ->
+											switch (state.get(QuarterLogBlock.BARK_SIDE)) {
+												case SOUTHEAST, SOUTHWEST -> bark;
+												case NORTHEAST, NORTHWEST -> wood;
+											};
+								}
+				)
+				.strength(2.0F)
+				.sounds(BlockSoundGroup.WOOD)
+				.burnable()
+		);
+	}
+
+	/**
+	 * Factory to create a Nether QuarterLogBlock with default settings and
+	 * the same map color on all block faces.
+	 *
+	 * @param color Map color for all faces of log
+	 * @return New QuarterLogBlock
+	 */
+	public static QuarterLogBlock ofNether(MapColor color) {
+		return new QuarterLogBlock(AbstractBlock.Settings.create()
+				.mapColor(color)
+				.strength(2.0F)
+				.sounds(BlockSoundGroup.NETHER_WOOD)
+		);
+	}
+
+	/**
+	 * Factory to create a Nether QuarterLogBlock with default settings and
+	 * different map colors on the exposed wood versus the bark sides.
+	 *
+	 * @param wood Map color for non-bark faces of log
+	 * @param bark Map color for bark faces of log
+	 * @return New QuarterLogBlock
+	 */
+	public static QuarterLogBlock ofNether(MapColor wood, MapColor bark) {
+		return new QuarterLogBlock(AbstractBlock.Settings.create()
+				.mapColor(
+						(state) ->
+								switch (state.get(PillarBlock.AXIS)) {
+									case Y -> wood;
+									case X ->
+											switch (state.get(QuarterLogBlock.BARK_SIDE)) {
+												case NORTHWEST, SOUTHWEST -> bark;
+												case NORTHEAST, SOUTHEAST -> wood;
+											};
+									case Z ->
+											switch (state.get(QuarterLogBlock.BARK_SIDE)) {
+												case SOUTHEAST, SOUTHWEST -> bark;
+												case NORTHEAST, NORTHWEST -> wood;
+											};
+								}
+				)
+				.strength(2.0F)
+				.sounds(BlockSoundGroup.NETHER_WOOD)
+		);
 	}
 
 	@Override
@@ -58,40 +165,6 @@ public class QuarterLogBlock extends PillarBlock {
 		BarkSide side = BarkSide.fromHit(context.getSide().getAxis(), hitX, hitY, hitZ);
 
 		return super.getPlacementState(context).with(BARK_SIDE, side);
-	}
-
-	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		ItemStack heldStack = player.getEquippedStack(hand == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
-
-		if(heldStack.isEmpty()) {
-			return ActionResult.FAIL;
-		}
-
-		Item held = heldStack.getItem();
-		if(!(held instanceof MiningToolItem)) {
-			return ActionResult.FAIL;
-		}
-
-		MiningToolItem tool = (MiningToolItem) held;
-
-		if(stripped != null && (tool.getMiningSpeedMultiplier(heldStack, state) > 1.0F)) {
-			world.playSound(player, pos, SoundEvents.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0F, 1.0F);
-
-			if(!world.isClient) {
-				BlockState target = stripped.get().getDefaultState()
-						.with(QuarterLogBlock.AXIS, state.get(QuarterLogBlock.AXIS))
-						.with(QuarterLogBlock.BARK_SIDE, state.get(QuarterLogBlock.BARK_SIDE));
-
-				world.setBlockState(pos, target);
-
-				heldStack.damage(1, player, consumedPlayer -> consumedPlayer.sendToolBreakStatus(hand));
-			}
-
-			return ActionResult.SUCCESS;
-		}
-
-		return ActionResult.SUCCESS;
 	}
 
 	/**
@@ -126,18 +199,18 @@ public class QuarterLogBlock extends PillarBlock {
 			boolean hitSouth;
 
 			switch (axis) {
-				case Y:
+				case Y -> {
 					hitEast = hitX >= 0.5;
 					hitSouth = hitZ >= 0.5;
-					break;
-				case X:
+				}
+				case X -> {
 					hitEast = hitY <= 0.5;
 					hitSouth = hitZ >= 0.5;
-					break;
-				default:
+				}
+				default -> {
 					hitEast = hitX >= 0.5;
 					hitSouth = hitY >= 0.5;
-					break;
+				}
 			}
 
 			// Logic of placement: The quadrant the player clicks on should be the one farthest from the bark sides.

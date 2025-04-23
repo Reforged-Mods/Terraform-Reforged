@@ -1,18 +1,15 @@
 package com.terraformersmc.terraform.boat.api;
 
-import com.mojang.serialization.Lifecycle;
-
+import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.util.registry.SimpleRegistry;
 
 /**
  * @see TerraformBoatTypeRegistry#INSTANCE
  */
 public class TerraformBoatTypeRegistry {
 	private static final Identifier REGISTRY_ID = new Identifier("terraform", "boat");
-	private static final RegistryKey<Registry<TerraformBoatType>> REGISTRY_KEY = RegistryKey.ofRegistry(REGISTRY_ID);
 
 	/**
 	 * The registry for {@linkplain TerraformBoatType Terraform boats}.
@@ -27,5 +24,9 @@ public class TerraformBoatTypeRegistry {
 	 * @see com.terraformersmc.terraform.boat.api.TerraformBoatType.Builder The builder for boat types
 	 * @see com.terraformersmc.terraform.boat.api.client.TerraformBoatClientHelper Helpers for registering the boat on the client
 	 */
-	public static final Registry<TerraformBoatType> INSTANCE = new SimpleRegistry<>(REGISTRY_KEY, Lifecycle.stable(), null);
+	public static final Registry<TerraformBoatType> INSTANCE = FabricRegistryBuilder.createSimple(TerraformBoatType.class, REGISTRY_ID).buildAndRegister();
+
+	public static RegistryKey<TerraformBoatType> createKey(Identifier id) {
+		return RegistryKey.of(INSTANCE.getKey(), id);
+	}
 }
