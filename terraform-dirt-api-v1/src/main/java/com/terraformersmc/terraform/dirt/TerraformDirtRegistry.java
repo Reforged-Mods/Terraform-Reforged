@@ -28,7 +28,7 @@ public class TerraformDirtRegistry {
 	 * else things will not work properly!</p>
 	 *
 	 * @param blocks the DirtBlocks to register with Terraform. Note that you are still responsible for registering the
-	 *               block instances with {@link net.minecraft.util.registry.Registry#BLOCK} yourself, this method does
+	 *               block instances with {@link net.minecraftforge.registries.ForgeRegistries#BLOCKS} yourself, this method does
 	 *               not do that for you.
 	 * @return the registered DirtBlocks instance for convenience
 	 */

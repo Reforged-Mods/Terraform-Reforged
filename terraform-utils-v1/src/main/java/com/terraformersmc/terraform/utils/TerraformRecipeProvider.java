@@ -2,23 +2,22 @@ package com.terraformersmc.terraform.utils;
 
 import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
-import net.minecraft.data.DataCache;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.DataOutput;
 import net.minecraft.data.DataWriter;
-import net.minecraft.data.server.RecipeProvider;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.fml.ModLoadingContext;
 
-import java.nio.file.Path;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
-public class TerraformRecipeProvider extends RecipeProvider {
-	public TerraformRecipeProvider(DataGenerator root) {
+public abstract class TerraformRecipeProvider extends RecipeProvider {
+	public TerraformRecipeProvider(DataOutput root) {
 		super(root);
 	}
 
 	@Override
-	public void run(DataWriter cache) {
+	public CompletableFuture<?> run(DataWriter cache) {
 		Set<Identifier> generatedRecipes = Sets.newHashSet();
 		generate(provider -> {
 			Identifier identifier = getRecipeIdentifier(provider.getRecipeId());
@@ -36,6 +35,7 @@ public class TerraformRecipeProvider extends RecipeProvider {
 				saveRecipeAdvancement(cache, advancementJson, this.advancementsPathResolver.resolveJson(getRecipeIdentifier(provider.getAdvancementId())));
 			}
 		});
+		return null;
 	}
 
 	/**

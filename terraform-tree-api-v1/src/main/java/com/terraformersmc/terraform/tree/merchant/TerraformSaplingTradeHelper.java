@@ -12,8 +12,6 @@ import net.minecraft.item.Items;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOffers;
-import net.minecraft.world.WanderingTraderManager;
-import net.minecraftforge.event.village.WandererTradesEvent;
 import org.apache.commons.lang3.ArrayUtils;
 
 /**
@@ -21,9 +19,6 @@ import org.apache.commons.lang3.ArrayUtils;
  */
 public final class TerraformSaplingTradeHelper {
 	private TerraformSaplingTradeHelper() {}
-
-	public static void onWanderingTraderEvent(WandererTradesEvent event){
-	}
 
 	/**
 	 * Registers a trade for wandering traders that sells saplings for 5 emeralds, similar to vanilla saplings.

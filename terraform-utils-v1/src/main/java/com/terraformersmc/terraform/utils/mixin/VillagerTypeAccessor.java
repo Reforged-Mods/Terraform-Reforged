@@ -1,6 +1,6 @@
 package com.terraformersmc.terraform.utils.mixin;
 
-import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.village.VillagerType;
 import net.minecraft.world.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;

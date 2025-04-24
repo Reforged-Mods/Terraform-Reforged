@@ -6,27 +6,26 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.MapColor;
-import net.minecraft.block.Material;
 import net.minecraft.entity.EntityType;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
+import net.minecraftforge.client.model.obj.ObjMaterialLibrary.Material;
 
 import java.util.function.ToIntFunction;
 
 public class TerraformBlockSettings extends AbstractBlock.Settings {
-	protected TerraformBlockSettings(Material material, MapColor color) {
-		super(material, color);
+	protected TerraformBlockSettings() {
+		super();
 	}
 
 	protected TerraformBlockSettings(AbstractBlock.Settings settings) {
-		super(((AbstractBlockSettingsAccessor) settings).getMaterial(), ((AbstractBlockSettingsAccessor) settings).getMapColorProvider());
+		this();
 		// Mostly Copied from vanilla's copy method
 		// Note: If new methods are added to Block settings, an accessor must be added here
 		AbstractBlockSettingsAccessor thisAccessor = (AbstractBlockSettingsAccessor) this;
 		AbstractBlockSettingsAccessor otherAccessor = (AbstractBlockSettingsAccessor) settings;
 
-		thisAccessor.setMaterial(otherAccessor.getMaterial());
 		this.hardness(otherAccessor.getHardness());
 		this.resistance(otherAccessor.getResistance());
 		this.collidable(otherAccessor.getCollidable());
@@ -49,16 +48,8 @@ public class TerraformBlockSettings extends AbstractBlock.Settings {
 		this.emissiveLighting(otherAccessor.getEmissiveLightingPredicate());
 	}
 
-	public static TerraformBlockSettings of(Material material) {
-		return of(material, material.getColor());
-	}
-
-	public static TerraformBlockSettings of(Material material, MapColor color) {
-		return new TerraformBlockSettings(material, color);
-	}
-
-	public static TerraformBlockSettings of(Material material, DyeColor color) {
-		return new TerraformBlockSettings(material, color.getMapColor());
+	public static TerraformBlockSettings create() {
+		return new TerraformBlockSettings();
 	}
 
 	public static TerraformBlockSettings copyOf(AbstractBlock block) {
@@ -103,13 +94,6 @@ public class TerraformBlockSettings extends AbstractBlock.Settings {
 	public TerraformBlockSettings sounds(BlockSoundGroup group) {
 		super.sounds(group);
 		return this;
-	}
-
-	/**
-	 * @deprecated Please use {@link TerraformBlockSettings#luminance(ToIntFunction)}.
-	 */
-	public TerraformBlockSettings lightLevel(ToIntFunction<BlockState> levelFunction) {
-		return this.luminance(levelFunction);
 	}
 
 	@Override

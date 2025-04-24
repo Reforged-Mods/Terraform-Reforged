@@ -4,7 +4,6 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.MapColor;
-import net.minecraft.block.Material;
 import net.minecraft.entity.EntityType;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
@@ -18,9 +17,6 @@ import java.util.function.ToIntFunction;
 @Mixin(AbstractBlock.Settings.class)
 public interface AbstractBlockSettingsAccessor {
     /* GETTERS */
-	@Accessor
-	Material getMaterial();
-
 	@Accessor
 	float getHardness();
 
@@ -82,9 +78,6 @@ public interface AbstractBlockSettingsAccessor {
 	AbstractBlock.ContextPredicate getEmissiveLightingPredicate();
 
 	/* SETTERS */
-	@Accessor
-	void setMaterial(Material material);
-
 	@Accessor
 	void setHardness(float hardness);
 
