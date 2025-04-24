@@ -1,11 +1,11 @@
 package com.terraformersmc.terraform.sign.mixin;
 
 import com.terraformersmc.terraform.sign.TerraformHangingSign;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.gui.screen.ingame.HangingSignEditScreen;
 import net.minecraft.util.Identifier;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HangingSignEditScreen.class)
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class MixinHangingSignEditScreen {
 	@Shadow
 	@Final

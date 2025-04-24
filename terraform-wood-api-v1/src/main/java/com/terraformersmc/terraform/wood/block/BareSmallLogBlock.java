@@ -94,6 +94,7 @@ public class BareSmallLogBlock extends Block implements Waterloggable {
 		if (stripped != null) {
 			StrippableBlockRegistry.register(this, stripped.get());
 		}
+
 	}
 
 	/**

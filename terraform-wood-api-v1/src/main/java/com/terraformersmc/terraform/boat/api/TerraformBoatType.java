@@ -1,8 +1,6 @@
 package com.terraformersmc.terraform.boat.api;
 
 import com.terraformersmc.terraform.boat.impl.TerraformBoatTypeImpl;
-import com.terraformersmc.terraform.boat.impl.entity.TerraformBoatEntity;
-import com.terraformersmc.terraform.boat.impl.entity.TerraformChestBoatEntity;
 
 import net.minecraft.item.Item;
 

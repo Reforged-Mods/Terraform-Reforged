@@ -2,6 +2,7 @@ package com.terraformersmc.terraform.boat.api.client;
 
 import com.terraformersmc.terraform.boat.impl.client.TerraformBoatClientInitializer;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.client.model.TexturedModelData;
 import net.minecraft.client.render.entity.model.BoatEntityModel;
 import net.minecraft.client.render.entity.model.ChestBoatEntityModel;
 import net.minecraft.client.render.entity.model.ChestRaftEntityModel;
@@ -10,6 +11,8 @@ import net.minecraft.client.render.entity.model.RaftEntityModel;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.function.Supplier;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("deprecation")
@@ -46,7 +49,7 @@ public final class TerraformBoatClientHelper {
 		return new EntityModelLayer(getLayerId(boatId, raft, chest), "main");
 	}
 
-	private static TexturedModelDataProvider getTexturedModelDataProvider(boolean raft, boolean chest) {
+	private static Supplier<TexturedModelData> getTexturedModelDataProvider(boolean raft, boolean chest) {
 		if (raft) {
 			return chest ? ChestRaftEntityModel::getTexturedModelData : RaftEntityModel::getTexturedModelData;
 		} else {
@@ -64,8 +67,8 @@ public final class TerraformBoatClientHelper {
 	 *     TerraformBoatClientHelper.registerModelLayer(new Identifier("examplemod", "mahogany"), false, false);
 	 * }</pre>
 	 */
-	public static void registerModelLayer(Identifier boatId, boolean chest) {
-		TerraformBoatClientInitializer.SUPPLIER_MAP.computeIfAbsent(boatId, b -> new Object2ObjectOpenHashMap<>()).put(chest, () -> BoatEntityModel.getTexturedModelData(chest));
+	public static void registerModelLayer(Identifier boatId, boolean raft, boolean chest) {
+		TerraformBoatClientInitializer.SUPPLIER_MAP.computeIfAbsent(boatId, b -> new Object2ObjectOpenHashMap<>()).put(chest, getTexturedModelDataProvider(raft, chest));
 	}
 
 	/**
