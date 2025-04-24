@@ -3,11 +3,14 @@ package com.terraformersmc.terraform.utils;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
 import net.minecraft.data.DataOutput;
+import net.minecraft.data.DataProvider;
 import net.minecraft.data.DataWriter;
 import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.fml.ModLoadingContext;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -17,25 +20,25 @@ public abstract class TerraformRecipeProvider extends RecipeProvider {
 	}
 
 	@Override
-	public CompletableFuture<?> run(DataWriter cache) {
+	public CompletableFuture<?> run(DataWriter writer) {
 		Set<Identifier> generatedRecipes = Sets.newHashSet();
-		generate(provider -> {
+		List<CompletableFuture<?>> list = new ArrayList();
+		this.generate((provider) -> {
 			Identifier identifier = getRecipeIdentifier(provider.getRecipeId());
-
 			if (!generatedRecipes.add(identifier)) {
 				throw new IllegalStateException("Duplicate recipe " + identifier);
 			}
-
-			JsonObject recipeJson = provider.toJson();
-
-			saveRecipe(cache, recipeJson, this.recipesPathResolver.resolveJson(identifier));
-			JsonObject advancementJson = provider.toAdvancementJson();
-
-			if (advancementJson != null) {
-				saveRecipeAdvancement(cache, advancementJson, this.advancementsPathResolver.resolveJson(getRecipeIdentifier(provider.getAdvancementId())));
+			list.add(DataProvider.writeToPath(writer, provider.toJson(), this.recipesPathResolver.resolveJson(identifier)));
+			JsonObject jsonobject = provider.toAdvancementJson();
+			if (jsonobject != null) {
+				CompletableFuture<?> saveAdvancementFuture = this.saveAdvancement(writer, provider, jsonobject);
+				if (saveAdvancementFuture != null) {
+					list.add(saveAdvancementFuture);
+				}
 			}
+
 		});
-		return null;
+		return CompletableFuture.allOf(list.toArray(CompletableFuture[]::new));
 	}
 
 	/**
