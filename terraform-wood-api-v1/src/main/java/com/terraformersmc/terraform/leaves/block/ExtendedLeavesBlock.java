@@ -9,6 +9,9 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.IntProperty;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
@@ -25,12 +28,10 @@ import java.util.List;
 /**
  * A leaves block with extended range, permitting leaves to be as far as 13 blocks away from the tree rather than the
  * limit of 6 blocks imposed by vanilla leaves. It also does not block light at all.
- *
- * This class must override every LeavesBlock function that references (compiler inlined) MAX_DISTANCE.
- * The DISTANCE_1_7 property used by LeavesBlock is globally overridden by our MixinProperties.
  */
-public class ExtendedLeavesBlock extends LeavesBlock {
+public class ExtendedLeavesBlock extends TransparentLeavesBlock {
 	public static final int MAX_DISTANCE = 14;
+	public static final IntProperty DISTANCE = IntProperty.of("distance", 1, 14);
 
 	public ExtendedLeavesBlock(AbstractBlock.Settings settings) {
 		super(settings);
@@ -39,6 +40,11 @@ public class ExtendedLeavesBlock extends LeavesBlock {
 				.with(DISTANCE, MAX_DISTANCE)
 				.with(PERSISTENT, false)
 				.with(WATERLOGGED, false));
+	}
+
+	@Override
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		builder.add(DISTANCE, PERSISTENT, WATERLOGGED);
 	}
 
 	@Override
@@ -54,11 +60,6 @@ public class ExtendedLeavesBlock extends LeavesBlock {
 	@Override
 	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
 		world.setBlockState(pos, ExtendedLeavesBlock.updateDistanceFromLogs(state, world, pos), 3);
-	}
-
-	@Override
-	public int getOpacity(BlockState state, BlockView view, BlockPos pos) {
-		return 0;
 	}
 
 	@Override
@@ -99,7 +100,7 @@ public class ExtendedLeavesBlock extends LeavesBlock {
 		if (block instanceof ExtendedLeavesBlock) {
 			return state.get(DISTANCE);
 		} else if (block instanceof LeavesBlock) {
-			int distance = state.get(DISTANCE);
+			int distance = state.get(LeavesBlock.DISTANCE);
 			return distance < LeavesBlock.MAX_DISTANCE ? distance : MAX_DISTANCE;
 		}
 

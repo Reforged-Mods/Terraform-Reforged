@@ -21,7 +21,7 @@ public class ComposterRecipes {
 	}
 
 	public static void registerCompostableBlock(Block block) {
-		if (block instanceof ExtendedLeavesBlock || block instanceof LeavesBlock || block instanceof LeafPileBlock || block instanceof SaplingBlock || block instanceof SeagrassBlock) {
+		if (block instanceof LeavesBlock || block instanceof LeafPileBlock || block instanceof SaplingBlock || block instanceof SeagrassBlock) {
 			registerCompostableItem(block, 0.3F);
 		} else if (block instanceof FernBlock || block instanceof FlowerBlock) {
 			registerCompostableItem(block, 0.65F);
