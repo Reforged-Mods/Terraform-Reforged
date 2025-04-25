@@ -4,6 +4,7 @@ import com.terraformersmc.terraform.boat.api.client.TerraformBoatClientHelper;
 import com.terraformersmc.terraform.boat.impl.TerraformBoatInitializer;
 
 import com.terraformersmc.terraform.sign.SpriteIdentifierRegistry;
+import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.client.model.TexturedModelData;
 import net.minecraft.util.Identifier;
@@ -20,7 +21,7 @@ import java.util.function.Supplier;
 @OnlyIn(Dist.CLIENT)
 public final class TerraformBoatClientInitializer {
 
-	public static final Map<Identifier, Map<Boolean, Supplier<TexturedModelData>>> SUPPLIER_MAP = new Object2ObjectLinkedOpenHashMap<>();
+	public static final Map<Identifier, Map<Boolean, Pair<Boolean, Supplier<TexturedModelData>>>> SUPPLIER_MAP = new Object2ObjectLinkedOpenHashMap<>();
 
 	@SubscribeEvent
 	public void onEvent(EntityRenderersEvent.RegisterRenderers event){
@@ -31,13 +32,13 @@ public final class TerraformBoatClientInitializer {
 	@SubscribeEvent
 	public void onRegisterModelLayers(EntityRenderersEvent.RegisterLayerDefinitions event){
 		SUPPLIER_MAP.forEach((i, s) -> {
-			event.registerLayerDefinition(TerraformBoatClientHelper.getLayer(i, true), s.get(true));
-			event.registerLayerDefinition(TerraformBoatClientHelper.getLayer(i, false), s.get(false));
+			event.registerLayerDefinition(TerraformBoatClientHelper.getLayer(i, s.get(true).key(), true), s.get(true).value());
+			event.registerLayerDefinition(TerraformBoatClientHelper.getLayer(i, s.get(false).key(), false), s.get(false).value());
 		});
 	}
 
 	@SubscribeEvent
-	public void onRegisterSpriteEvents(TextureStitchEvent.Pre event){
+	public void onRegisterSpriteEvents(TextureStitchEvent event){
 		SpriteIdentifierRegistry.INSTANCE.getIdentifiers().forEach(spriteIdentifier -> {
 			if (event.getAtlas().getId().equals(spriteIdentifier.getAtlasId())){
 				event.addSprite(spriteIdentifier.getTextureId());

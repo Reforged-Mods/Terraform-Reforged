@@ -1,6 +1,7 @@
 package com.terraformersmc.terraform.boat.api.client;
 
 import com.terraformersmc.terraform.boat.impl.client.TerraformBoatClientInitializer;
+import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.model.TexturedModelData;
 import net.minecraft.client.render.entity.model.BoatEntityModel;
@@ -68,7 +69,7 @@ public final class TerraformBoatClientHelper {
 	 * }</pre>
 	 */
 	public static void registerModelLayer(Identifier boatId, boolean raft, boolean chest) {
-		TerraformBoatClientInitializer.SUPPLIER_MAP.computeIfAbsent(boatId, b -> new Object2ObjectOpenHashMap<>()).put(chest, getTexturedModelDataProvider(raft, chest));
+		TerraformBoatClientInitializer.SUPPLIER_MAP.computeIfAbsent(boatId, b -> new Object2ObjectOpenHashMap<>()).put(chest, Pair.of(raft, getTexturedModelDataProvider(raft, chest)));
 	}
 
 	/**
