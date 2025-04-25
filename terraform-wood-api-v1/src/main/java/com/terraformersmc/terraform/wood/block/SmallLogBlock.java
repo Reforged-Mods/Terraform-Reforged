@@ -1,12 +1,12 @@
 package com.terraformersmc.terraform.wood.block;
 
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.LeavesBlock;
+import net.minecraft.block.MapColor;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.client.util.ParticleUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
@@ -58,29 +58,6 @@ public class SmallLogBlock extends BareSmallLogBlock {
 		);
 
 		this.leaves = leaves;
-	}
-
-	/**
-	 * <p>This constructor is deprecated in favor of using the new SmallLogBlock.of() factories
-	 * and Fabric's StrippableBlockRegistry.</p>
-	 *
-	 * <pre>{@code
-	 *     SmallLogBlock logBlock = SmallLogBlock.of(leaves, woodColor, barkColor);
-	 *     SmallLogBlock strippedBlock = SmallLogBlock.of(leaves, woodColor);
-	 *     StrippableBlockRegistry.register(logBlock, strippedBlock);
-	 * }</pre>
-	 *
-	 * @param leaves Block used for leaves on log
-	 * @param stripped Supplier of default BlockState for stripped variant
-	 * @param settings Block Settings for log
-	 */
-	@Deprecated(forRemoval = true, since = "6.1.0")
-	public SmallLogBlock(Block leaves, Supplier<Block> stripped, Settings settings) {
-		this(leaves, settings);
-
-		if (stripped != null) {
-			StrippableBlockRegistry.register(this, stripped.get());
-		}
 	}
 
 	/**

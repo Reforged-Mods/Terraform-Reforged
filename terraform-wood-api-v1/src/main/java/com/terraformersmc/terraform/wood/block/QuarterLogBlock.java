@@ -1,8 +1,6 @@
 package com.terraformersmc.terraform.wood.block;
 
-import java.util.function.Supplier;
 
-import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.sound.BlockSoundGroup;
@@ -27,29 +25,6 @@ public class QuarterLogBlock extends PillarBlock {
 		this.setDefaultState(this.stateManager.getDefaultState()
 				.with(AXIS, Direction.Axis.Y)
 				.with(BARK_SIDE, BarkSide.NORTHEAST));
-	}
-
-	/**
-	 * <p>This constructor is deprecated in favor of using the new QuarterLogBlock.of() factories
-	 * and Fabric's StrippableBlockRegistry.</p>
-	 *
-	 * <pre>{@code
-	 *     QuarterLogBlock logBlock = QuarterLogBlock.of(woodColor, barkColor);
-	 *     QuarterLogBlock strippedBlock = QuarterLogBlock.of(woodColor);
-	 *     StrippableBlockRegistry.register(logBlock, strippedBlock);
-	 * }</pre>
-	 *
-	 * @param stripped Supplier of default BlockState for stripped variant
-	 * @param color Ignored (never implemented)
-	 * @param settings Block Settings for log
-	 */
-	@Deprecated(forRemoval = true, since = "6.1.0")
-	public QuarterLogBlock(Supplier<Block> stripped, MapColor color, AbstractBlock.Settings settings) {
-		this(settings);
-
-		if (stripped != null) {
-			StrippableBlockRegistry.register(this, stripped.get());
-		}
 	}
 
 	/**

@@ -2,7 +2,6 @@ package com.terraformersmc.terraform.wood.block;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -72,29 +71,6 @@ public class BareSmallLogBlock extends Block implements Waterloggable {
 
 		this.collisionShapes = this.createShapes(LOG_RADIUS);
 		this.boundingShapes = this.createShapes(LOG_RADIUS);
-	}
-
-	/**
-	 * <p>This constructor is deprecated in favor of using the new BareSmallLogBlock.of() factories
-	 * and Fabric's StrippableBlockRegistry.</p>
-	 *
-	 * <pre>{@code
-	 *     BareSmallLogBlock logBlock = BareSmallLogBlock.of(woodColor, barkColor);
-	 *     BareSmallLogBlock strippedBlock = BareSmallLogBlock.of(woodColor);
-	 *     StrippableBlockRegistry.register(logBlock, strippedBlock);
-	 * }</pre>
-	 *
-	 * @param stripped Supplier of default BlockState for stripped variant
-	 * @param settings Block Settings for log
-	 */
-	@Deprecated(forRemoval = true, since = "6.1.0")
-	public BareSmallLogBlock(Supplier<Block> stripped, AbstractBlock.Settings settings) {
-		this(settings);
-
-		if (stripped != null) {
-			StrippableBlockRegistry.register(this, stripped.get());
-		}
-
 	}
 
 	/**
