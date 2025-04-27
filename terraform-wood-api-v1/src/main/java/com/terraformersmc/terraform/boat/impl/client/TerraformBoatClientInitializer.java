@@ -39,10 +39,10 @@ public final class TerraformBoatClientInitializer {
 
 	@SubscribeEvent
 	public void onRegisterSpriteEvents(TextureStitchEvent event){
-		SpriteIdentifierRegistry.INSTANCE.getIdentifiers().forEach(spriteIdentifier -> {
+		/*SpriteIdentifierRegistry.INSTANCE.getIdentifiers().forEach(spriteIdentifier -> {
 			if (event.getAtlas().getId().equals(spriteIdentifier.getAtlasId())){
 				event.addSprite(spriteIdentifier.getTextureId());
 			}
-		});
+		});*/
 	}
 }
