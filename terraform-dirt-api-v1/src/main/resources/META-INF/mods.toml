@@ -1,6 +1,6 @@
 modLoader="javafml"
 license="Apache-2.0"
-loaderVersion="[43,)"
+loaderVersion="[47,)"
 issueTrackerURL="https://github.com/Trinsdar/Terraform-Reforged/issues"
 
 [[mods]]
@@ -14,12 +14,12 @@ description='''A Port of the Terraform api to forge'''
 [[dependencies.terraform_dirt_api_v1]]
 modId="forge"
 mandatory=true
-versionRange="[43.1.0,)"
+versionRange="[47.1.0,)"
 ordering="AFTER"
 side="BOTH"
 [[dependencies.terraform_dirt_api_v1]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.19.2,)"
+versionRange="[1.20.1,)"
 ordering="AFTER"
 side="BOTH"
