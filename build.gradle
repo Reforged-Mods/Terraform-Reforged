@@ -81,8 +81,8 @@ subprojects {
 	publishing {
 		publications {
 			mavenJava(MavenPublication) {
-				// add all the jars that should be included when publishing to maven
-				from components.java
+				artifact remapJar
+				artifact sourcesJar
 			}
 		}
 		setupRepositories(repositories)
