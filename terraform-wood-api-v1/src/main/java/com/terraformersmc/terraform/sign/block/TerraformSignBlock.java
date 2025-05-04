@@ -7,15 +7,14 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.SignType;
 
 public class TerraformSignBlock extends SignBlock implements TerraformSign {
-	private final Identifier texture;
-
-	public TerraformSignBlock(Identifier texture, Settings settings) {
-		super(settings, SignType.OAK);
-		this.texture = texture;
+	SignType signType;
+	public TerraformSignBlock(Settings settings, SignType type) {
+		super(settings, type);
+		this.signType = type;
 	}
 
 	@Override
-	public Identifier getTexture() {
-		return texture;
+	public SignType getSignType() {
+		return signType;
 	}
 }

@@ -6,6 +6,7 @@ import com.terraformersmc.terraform.boat.impl.TerraformBoatInitializer;
 import com.terraformersmc.terraform.sign.SpriteIdentifierRegistry;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.client.model.TexturedModelData;
+import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -39,8 +40,8 @@ public final class TerraformBoatClientInitializer {
 	@SubscribeEvent
 	public void onRegisterSpriteEvents(TextureStitchEvent.Pre event){
 		SpriteIdentifierRegistry.INSTANCE.getIdentifiers().forEach(spriteIdentifier -> {
-			if (event.getAtlas().getId().equals(spriteIdentifier.getAtlasId())){
-				event.addSprite(spriteIdentifier.getTextureId());
+			if (event.getAtlas().getId().equals(TexturedRenderLayers.SIGNS_ATLAS_TEXTURE)){
+				event.addSprite(spriteIdentifier);
 			}
 		});
 	}

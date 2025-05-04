@@ -1,7 +1,8 @@
 package com.terraformersmc.terraform.sign;
 
 import net.minecraft.util.Identifier;
+import net.minecraft.util.SignType;
 
 public interface TerraformSign {
-	Identifier getTexture();
+	SignType getSignType();
 }
