@@ -6,20 +6,21 @@ import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.util.Identifier;
 
 public class SpriteIdentifierRegistry {
 	public static final SpriteIdentifierRegistry INSTANCE = new SpriteIdentifierRegistry();
-	private final List<SpriteIdentifier> identifiers;
+	private final List<Identifier> identifiers;
 
 	private SpriteIdentifierRegistry() {
 		identifiers = new ArrayList<>();
 	}
 
-	public void addIdentifier(SpriteIdentifier sprite) {
+	public void addIdentifier(Identifier sprite) {
 		this.identifiers.add(sprite);
 	}
 
-	public Collection<SpriteIdentifier> getIdentifiers() {
+	public Collection<Identifier> getIdentifiers() {
 		return Collections.unmodifiableList(identifiers);
 	}
 }

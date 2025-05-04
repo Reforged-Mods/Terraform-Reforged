@@ -8,15 +8,14 @@ import net.minecraft.block.WoodType;
 import net.minecraft.util.Identifier;
 
 public class TerraformSignBlock extends SignBlock implements TerraformSign {
-	private final Identifier texture;
-
-	public TerraformSignBlock(Identifier texture, Settings settings) {
-		super(BlockSettingsLock.lock(settings), WoodType.OAK);
-		this.texture = texture;
+	SignType signType;
+	public TerraformSignBlock(Settings settings, SignType type) {
+		super(settings, type);
+		this.signType = type;
 	}
 
 	@Override
-	public Identifier getTexture() {
-		return texture;
+	public SignType getSignType() {
+		return signType;
 	}
 }
