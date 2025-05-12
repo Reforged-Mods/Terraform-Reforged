@@ -3,6 +3,7 @@ package com.terraformersmc.terraform.boat.impl.client;
 import com.terraformersmc.terraform.boat.api.client.TerraformBoatClientHelper;
 import com.terraformersmc.terraform.boat.impl.TerraformBoatInitializer;
 
+import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.client.model.TexturedModelData;
 import net.minecraft.client.render.TexturedRenderLayers;
