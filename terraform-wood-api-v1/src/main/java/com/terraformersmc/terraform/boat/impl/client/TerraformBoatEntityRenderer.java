@@ -46,17 +46,16 @@ public class TerraformBoatEntityRenderer extends BoatEntityRenderer {
 		}));
 	}
 
-	@Override
-	public Identifier getTexture(BoatEntity entity) {
-		if (entity instanceof TerraformBoatHolder) {
-			TerraformBoatType boat = ((TerraformBoatHolder) entity).getTerraformBoat();
-			return this.texturesAndModels.get(boat).getFirst();
-		}
-		return super.getTexture(entity);
-	}
-
 	public Pair<Identifier, CompositeEntityModel<BoatEntity>> getTextureAndModel(TerraformBoatHolder holder) {
 		return this.texturesAndModels.get(holder.getTerraformBoat());
+	}
+
+	@Override
+	public Pair<Identifier, CompositeEntityModel<BoatEntity>> getModelWithLocation(BoatEntity boat) {
+		if (boat instanceof TerraformBoatHolder boatHolder) {
+			return getTextureAndModel(boatHolder);
+		}
+		return super.getModelWithLocation(boat);
 	}
 
 	private CompositeEntityModel<BoatEntity> createModel(ModelPart part, boolean raft, boolean chest) {
